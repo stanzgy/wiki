@@ -21,19 +21,19 @@ topic名字方便的在launchpad上找到和这次commit相关的信息.
 
 下面以我们scm上的nova仓库为例
 
-0. 安装git-review
+### 安装git-review
 
     stanzgy % pip install review
 
-1. 获得代码
+### 获得代码
 
     stanzgy % git clone ssh://hzzhanggy@scm.hz.netease.com:2222/openstack/nova
 
-1.5 添加scm到git remote(如果代码是从官方的github clone的)
+### 添加scm到git remote(如果代码是从官方的github clone的)
 
     stanzgy % git remote add scm ssh://hzzhanggy@scm.hz.netease.com:2222/openstack/nova
 
-2. 设置.gitreview
+### 设置.gitreview
 
 在nova仓库根目录下编辑文件.gitreview.
 host和project对应scm上的仓库地址, defaultbranch为我们的开发分支, defaultremote为前面添加
@@ -47,7 +47,7 @@ host和project对应scm上的仓库地址, defaultbranch为我们的开发分支
     defaultremote=scm
     defaultrebase=0
 
-3. 在提交review时使用topic机制
+### 在提交review时使用topic机制
 
 在JIRA上先建立相应的任务说明
 
