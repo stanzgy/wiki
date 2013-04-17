@@ -1,0 +1,81 @@
+= 网易Gerrit系统使用说明 =
+
+== Gerrit一句话简介 ==
+Gerrit是一个基于Web的代码评审和项目管理的工具, 面向基于Git版本控制系统的项目.
+NetEase Gerrit: https://scm.hz.netease.com
+
+
+== 添加公钥 ==
+在https://scm.hz.netease.com/#/settings/ssh-keys中添加Git使用的公钥.
+
+
+== 配置Git ==
+在需要连接Gerrit系统的本地git repo根目录下修改.git/config文件, 加入如下信息
+
+----
+[remote "review"]
+    url = ssh://hzzhanggy@scm.hz.netease.com:2222/openstack/glance.git
+    push = HEAD:refs/for/master
+    receivepack = git receive-pack --reviewer=hzzhanggy@corp.netease.com
+----
+
+把其中的hzzhanggy替换成自己的帐号, /openstack/glance.git替换成自己需要修改的
+项目, [remote "review"]中review可以替换成自己方便的名字.
+
+
+== 安装hook ==
+在git repo根目录下安装gerrit hook, 该hook会在提交信息中自动创建
+'Change-Id:'标签.
+
+----
+$ scp -p -P 29418 hzzhanggy@scm.hz.netease.com:hooks/commit-msg .git/hooks
+----
+
+其中hzzhanggy替换为自己的帐号
+
+
+== push代码到Gerrit ==
+
+----
+$ git push review
+----
+
+上面的review为前面修改过的.git/config中[remote "review"]中双引号中的内容
+
+
+== code review & verify ==
+第二步中push到服务器的代码并不会立刻merge到服务器的代码库中, 每个提交的代码需要
+进行code review, 通过review和verify后才会被gerrit系统merge到服务器代码库中.
+每个需要review的commit, 可在https://scm.hz.netease.com下All页面Open标签中看到,
+剩下两个标签Merged为已经合并到代码库中的提交和Abandoned废弃的提交.
+
+点击Open标签中任意一个提交, 打开review页面
+(类似https://scm.hz.netease.com/#/c/86/这样的地址), 点击review按钮可进行review
+或verify(须权限),有权限的用户在review时点击Publish按钮会把该提交merged到
+服务器代码库中.
+
+点击Diff按钮可查看本次提交与代码库中代码diff的结果, 并可以对每一行代码进行评论.
+
+点击Abandon会直接废弃该提交, 被废弃的提交以后无法使用相同的Change-Id进行提交.
+
+[NOTE]
+注意: 如果认为用户的提交因为某种原因被要求打回重做, 需要做的是在review时选择
+-1 vote并在comments中说明原因或该提交中存在的问题, 而不是直接点击Abandon按钮.
+开发者将代码修改之后重新推送到Gerrit时就要注意在提交说明中使用相同的"Change-Id"
+(使用 git commit --amend 提交即可保持提交说明), 以免创建新的评审任务.
+
+
+== 其他 ==
+更多说明和细节请阅读Gerrit文档
+https://scm.hz.netease.com/Documentation/index.html
+
+成熟的Gerrit使用社区:
+https://android-review.googlesource.com
+
+
+== 参考资料 ==
+* Gerrit Documentation: https://scm.hz.netease.com/Documentation/index.html
+* Google Android Gerrit: https://android-review.googlesource.com
+* "使用Gerrit进行code review": http://civilnet.cn/blog/article/258
+* "Gerrit介绍": http://hi.baidu.com/cartli/blog/item/dadad5eb1376845378f05532.html
+
