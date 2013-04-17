@@ -1,7 +1,6 @@
 # TCP/IP Illustrated, vol.1 reading notes
 
-vlan 802.1q
-===========
+## vlan 802.1q
 
 tcpdump 'vlan' pcap filter will shift 4 bytes right, be careful
 when filtering both vlan tagged and untagged packets.
@@ -11,29 +10,25 @@ when filtering both vlan tagged and untagged packets.
 > refs: http://www.christian-rossow.de/articles/tcpdump_filter_mixed_tagged_and_untagged_VLAN_traffic.php
 
 
-bonding 802.1ax(formerly 802.3ad)
-=================================
+## bonding 802.1ax(formerly 802.3ad)
 
 LACP(link aggregation control protocol) supplies several algorithms:
 RR, HA, Master-Slave, etc.
 
 
-STP
-===
+## STP
 
 RSTP doesn't use special TC(topology change) BPDUs which original STP use.
 RSTP sends periodical "keepalives" BPDUs to determine if connections are working properly.
 
 
-Data Fragmentation
-==================
+## Data Fragmentation
 
 one reason of data fragmentation is that there is probability that data cannot be transfer successfully.
 if there is no data fragmentation, the cost of re-transmit is too high.
 
 
-Point-to-Point Protocol(PPP)
-============================
+## Point-to-Point Protocol(PPP)
 
 PPP is a popular method to carry IP datagrams over serial links and should be considered a collection
 of protocols.
@@ -50,8 +45,7 @@ Network Control Protocol(NCP) is used to establish network layer communication.
 For IPv4, the NCP is IP Control Protocol(IPCP). For IPv6, the NCP is IPV6CP.
 
 
-Tunneling
-=========
+## Tunneling
 
 Tunneling is the idea of carrying lower-layer traffic in higher-layer packets.
 
@@ -62,8 +56,7 @@ link operates in only one direction: unidirectional link(UDL).
 promiscuous mode: allow interfaces to receive traffic even if it is not destined for them.
 
 
-ARP
-===
+## ARP
 
 Proxy ARP lets a system answer ARP requests for a different host. Alias: promiscuous ARP, ARP hack.
 linux: echo 1 > /proc/sys/net/ipv4/*/proxy_arp to enable auto-proxy ARP.
@@ -77,35 +70,36 @@ Address Conflict Detection(ACD) defines ARP probe and ARP annoucement packets.
 ARP filter: /proc/sys/net/ipv4/conf/*/arp_filter
 
 
-The Internet Protocol(IP)
-=========================
+## The Internet Protocol(IP)
 
 IP provides a best-effort(no guarantee), connectionless(no connection state) datagram delivery service.
 
 "tcpdump -xx" could dump packets with ethernet header
 
-#ethernet header
-octet: content
-0-2: dst mac addr
-3-5: src mac addr
-(4 octets): vlan tag
-6-7: ethertype, 0x0800(ipv4)/0x0806(arp)/0x8100(vlan)/0x86dd(ipv6)
-#followed by ethernet payload
+### ethernet header
 
-#ipv4 header
-0: version(0-3 bit), 4(ipv4)/6(ipv6)
-   IHL(Internet Header Length)(4-7 bit), header length in octet, minimum is 5(indicates 20 bytes).
-1: DSCP(Differentiated Services Code Point)(8-13 bit), former ToS.
-   ECN( Explicit Congestion Notification )(14-15 bit), don't care...
-2-3: Total Length, packet(fragment) size, including the header
-4-5: Identification
-6-7: Flags(16-18 bit), bit 0: Researved, must be zero; bit 1: Don't Fragment(DF), bit 2: More Fragment(MF)
-     Fragment Offset(19-31 bit)
-8: TTL(Time To Live)
-9: Protocol, 0x01(icmp)/0x02(igmp)/0x06(tcp)/0x11(udp)
-10-11: header checksum, CRC
-12-15: src ip addr
-16-19: dst ip addr
+    octet: content
+    0-2: dst mac addr
+    3-5: src mac addr
+    (4 octets): vlan tag
+    6-7: ethertype, 0x0800(ipv4)/0x0806(arp)/0x8100(vlan)/0x86dd(ipv6)
+    #followed by ethernet payload
+
+### ipv4 header
+
+    0: version(0-3 bit), 4(ipv4)/6(ipv6)
+       IHL(Internet Header Length)(4-7 bit), header length in octet, minimum is 5(indicates 20 bytes).
+    1: DSCP(Differentiated Services Code Point)(8-13 bit), former ToS.
+       ECN( Explicit Congestion Notification )(14-15 bit), don't care...
+    2-3: Total Length, packet(fragment) size, including the header
+    4-5: Identification
+    6-7: Flags(16-18 bit), bit 0: Researved, must be zero; bit 1: Don't Fragment(DF), bit 2: More Fragment(MF)
+         Fragment Offset(19-31 bit)
+    8: TTL(Time To Live)
+    9: Protocol, 0x01(icmp)/0x02(igmp)/0x06(tcp)/0x11(udp)
+    10-11: header checksum, CRC
+    12-15: src ip addr
+    16-19: dst ip addr
 
 ipv6 header is 40 bytes fixed size and extend headers are added when necessary.
 Next Header field in each header indicates the type of subsequent header.
@@ -121,62 +115,58 @@ The weak host model vice versa.
 Windows(Vista and later) uses the strong model host model by default whereas Linux defaults to the weak model.
 
 
-Dynamic Host Configuration Protocol(DHCP)
-=========================================
+## Dynamic Host Configuration Protocol(DHCP)
 
 The design of DHCP is based on an earlier protocol callled the Internet Bootstrap Protocol(BOOTP).
 BOOTP and DHCP are carried using UDP/IP. Clients use port 68 and servers use port 67.
 
-DHCPv4
-------
+### DHCPv4
 
-Client | Server
+    Client | Server
 
---> DISCOVER(null ciaddr; broadcast; xid; params request)
-<-- OFFER(broadcast; siaddr; xid; yiaddr; options)(maybe more than one server)
---> REQUEST(broadcast; siaddr; ciaddr; xid; options)
-  <-- ACK(broadcast; xid; yiaddr; options)
-  (Verifying, e.g. ACD; recommended; DECLINE if conflict)
+    --> DISCOVER(null ciaddr; broadcast; xid; params request)
+    <-- OFFER(broadcast; siaddr; xid; yiaddr; options)(maybe more than one server)
+    --> REQUEST(broadcast; siaddr; ciaddr; xid; options)
+      <-- ACK(broadcast; xid; yiaddr; options)
+      (Verifying, e.g. ACD; recommended; DECLINE if conflict)
 
-DHCPv6
-------
+### DHCPv6
 
-  Client | Server
-  --> SOLICIT(null/mcast; xid; DUID, options)
-  <-- ADVERTISE(mcast; xid, ip addr, server id, options)
-  --> REQUEST(mcast; ip addr, server id, xid)
-  <-- REPLY(mcast; xid, options)
-  (Verifying, e.g. DAD; recommended; DECLINE if conflict)
+    Client | Server
+    --> SOLICIT(null/mcast; xid; DUID, options)
+    <-- ADVERTISE(mcast; xid, ip addr, server id, options)
+    --> REQUEST(mcast; ip addr, server id, xid)
+    <-- REPLY(mcast; xid, options)
+    (Verifying, e.g. DAD; recommended; DECLINE if conflict)
 
 The approximately equivalent DHCPv4 messages for DHCPv6:
 
-  DHCPv6  |  DHCPv4
-  SOLICT     DISCOVER
-  ADVERTISE  OFFER
-  REQUEST    REQUEST
-  CONFIRM    REQUEST
-  RENEW      REQUEST
-  REBIND     DISCOVER
-  REPLY      ACK/NAK
-  RELEASE    RELEASE
-  DECLINE    DECLINE
-  RECONFIGURE FORCERENEW
-  INFORMATION-REQUEST INFORM
-  RELAY-FORW N/A
-  RELAY-REPL N/A
-  LEASEQUERY LEASEQUERY
-  LEASEQUERY-REPLY LEASE{UNASSIGNED, UNKNOW, ACTIVE}
-  LEASEQUERY-DONE LEASEQUERYDONE
-  LEASEQUERY-DATA N/A
-  N/A BULKLEASEQUERY
+    DHCPv6  |  DHCPv4
+    SOLICT     DISCOVER
+    ADVERTISE  OFFER
+    REQUEST    REQUEST
+    CONFIRM    REQUEST
+    RENEW      REQUEST
+    REBIND     DISCOVER
+    REPLY      ACK/NAK
+    RELEASE    RELEASE
+    DECLINE    DECLINE
+    RECONFIGURE FORCERENEW
+    INFORMATION-REQUEST INFORM
+    RELAY-FORW N/A
+    RELAY-REPL N/A
+    LEASEQUERY LEASEQUERY
+    LEASEQUERY-REPLY LEASE{UNASSIGNED, UNKNOW, ACTIVE}
+    LEASEQUERY-DONE LEASEQUERYDONE
+    LEASEQUERY-DATA N/A
+    N/A BULKLEASEQUERY
 
 IPv6 Duplicate Address Detection(DAD) uses ICMPv6 Neighbor Solicitation and Neighbor Advertisement
 messages to determine if a particular (tentative or optimistic) IPv6 address is already in use on
 the attached link.
 
 
-Network Address Translation(NAT)
-================================
+## Network Address Translation(NAT)
 
 Two major types of firewalls include proxy firewalls and packet-filtering firewalls.
 
@@ -201,14 +191,12 @@ with IPv6 that match or exceed the properties of NATs.
 
 Three NAT types: endpoint-independent, address-dependent, address-dependent and port-dependent.
 
-hairpin
--------
+### NAT hairpin
 
 A client wishes to reach a server and both reside on the same, private side of the same NAT. NATs that
 support this scenario implement so-called hairpinning or NAT loopback.
 
-hole punching
--------------
+### hole punching
 
 A method that attempts to allow two or more systems, each behind a NAT, to communicate directly using
 pinholes is called hole punching. To punch a hole, a client contacts a known server using an outgoing
@@ -216,8 +204,7 @@ connection that establishes a mapping in its local NAT. When another client cont
 the server has connections to each of the clients and knows their external addressing information between
 the clients. Once this information is know, a client can attempt a direct connection to the other client.
 
-UNilateral Self-Address Fixing(UNSAF)
--------------------------------------
+### UNilateral Self-Address Fixing(UNSAF)
 
 Applications employ a number of methods to determine the addresses their traffic will use when passed 
 through a NAT. This is called fixing(learning and maintaining) the addressing information.
