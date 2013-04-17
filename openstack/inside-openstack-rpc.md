@@ -1,6 +1,6 @@
 # Inside Openstack RPC
 
-> ![Under construction](media/under_construction.gif)
+> ![Under construction](/media/under_construction.gif)
 >
 > `>>> page under construction <<<`
 
@@ -12,7 +12,7 @@ For more detailed information please refer to [Office Document](http://docs.open
 
 The diagram below shows the message flow during an `rpc.call` operation:
 
-![RPC Call](media/rpc_call.png)
+![RPC Call](/media/rpc_call.png)
 
 *  a Topic Publisher is instantiated to send the message request to the queuing system; immediately before the publishing operation, a Direct Consumer is instantiated to wait for the response message.
 *  once the message is dispatched by the exchange, it is fetched by the Topic Consumer dictated by the routing key (such as .topic.host.) and passed to the Worker in charge of the task.
@@ -24,7 +24,7 @@ The diagram below shows the message flow during an `rpc.call` operation:
 
 The diagram below the message flow during an `rpc.cast` operation:
 
-![RPC Cast](media/rpc_cast.png)
+![RPC Cast](/media/rpc_cast.png)
 
 *  A Topic Publisher is instantiated to send the message request to the queuing system.
 *  Once the message is dispatched by the exchange, it is fetched by the Topic Consumer dictated by the routing key (such as .topic.) and passed to the Worker in charge of the task.
