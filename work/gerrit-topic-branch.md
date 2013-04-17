@@ -1,5 +1,4 @@
-使用Gerrit的topic机制提交代码
-==========================
+# 使用Gerrit的topic机制提交代码
 
 参考文档: http://wiki.openstack.org/GerritWorkflow
 
@@ -18,7 +17,7 @@ blueprint等等, 使用类似"bug/1074054"这样的topic命名, 这样进行code
 topic名字方便的在launchpad上找到和这次commit相关的信息.
 
 
-## howto使用gerrit的topic机制
+## 如何使用gerrit的topic机制
 
 下面以我们scm上的nova仓库为例
 
