@@ -1,8 +1,9 @@
 = 网易Gerrit系统使用说明 =
 
-== Gerrit一句话简介 ==
+== Gerrit简介 ==
 Gerrit是一个基于Web的代码评审和项目管理的工具, 面向基于Git版本控制系统的项目.
-NetEase Gerrit: https://scm.hz.netease.com
+
+NetEase Hangzhou Gerrit: https://scm.hz.netease.com
 
 
 == 添加公钥 ==
