@@ -149,8 +149,8 @@ BOOTP and DHCP are carried using UDP/IP. Clients use port 68 and servers use por
     --> DISCOVER(null ciaddr; broadcast; xid; params request)
     <-- OFFER(broadcast; siaddr; xid; yiaddr; options)(maybe more than one server)
     --> REQUEST(broadcast; siaddr; ciaddr; xid; options)
-      <-- ACK(broadcast; xid; yiaddr; options)
-      (Verifying, e.g. ACD; recommended; DECLINE if conflict)
+    <-- ACK(broadcast; xid; yiaddr; options)
+    (Verifying, e.g. ACD; recommended; DECLINE if conflict)
 
 ### DHCPv6
 
@@ -309,5 +309,42 @@ any IPv6-layer processing.
 6. An IPv6 node must limit the rate of ICMPv6 error messages it sends. There
 are a variety of ways of implementing the rate-limiting function, including the
 token bucket approach mentioned in Section 8.3.
+
+### ICMP Error Message
+
+An ICMP error message is not to be sent in response to any of the following
+messages: another ICMP error message, datagrams with bad headers(e.g. bad
+checksum), IP-layer broadcast/multicast datagrams, datagrams encapsulated in
+link-layer broadcast or multicast frames, datagrams with an invalid or network
+zero source address, or any fragment other than the first. The reason for
+imposing these restrictions on the generation of ICMP errors is to limit the 
+creation of so-called broadcast storms, a scenario in which the generation of a
+small number of messages creates an unwanted traffic cascade.
+
+An ICMPv4 error message is never generated in response to
+
+* An ICMPv4 error message.(An ICMPv4 error message may, however, be generated
+in response to an ICMPv4 query message.)
+* A datagram destined for an IPv4 broadcast address or an IPv4 multicast 
+address(formerly known as a class D address)
+* A datagram sent as a link-layer broadcast
+* A fragment other than the first
+* A datagram whose source address does not define a single host. This means 
+that the source address cannot be a zero address, a loopback address, a
+broadcast address, or a multicast address
+
+An ICMPv6 error message is never generated in response to
+
+* An ICMPv6 error message
+* An ICMPv6 Redirect message
+* A packet destined for an IPv6 multicast address, with two exceptions:
+  - The Packet Too Big(PTB) message
+  - The Parameter Problem message(code 2)
+* A packet sent as a link-layer multicast(with the exceptions noted previously)
+* A packet sent as a link-layer broadcast(with the exceptions noted previously)
+* A packet whose source address does not uniquely identify a single node. This
+means that the source address cannot be an unspecified address, an IPv6 
+multicast address, or any address known by the sender to be an anycast address
+
 
 
