@@ -347,4 +347,16 @@ means that the source address cannot be an unspecified address, an IPv6
 multicast address, or any address known by the sender to be an anycast address
 
 
+    % sysctl -a | grep icmp_rate
+    net.ipv4.icmp_ratemask = 6168
+    net.ipv4.icmp_ratelimit = 100
+
+The ratemask variale indicates which messages have the limit applied to them,
+by turning on the kth bit in the mask if the message with code number k is to
+be limited, starting from 0. In this case, codes 3, 4, 11 and 12 are being
+limit ed (because 6168=0x1818=0001100000011000, where bits 3, 4, 11 and 12
+from the right are turned on).
+
+### ICMP Query/Informational Message
+
 
