@@ -359,4 +359,62 @@ from the right are turned on).
 
 ### ICMP Query/Informational Message
 
+#### Echo Request/Reply(ping)
 
+The (DUP!) notation indicates that an Echo Reply has been received containing
+a Sequence Number field identical to a previously received one.
+
+#### Multicast Listener Query/Report/Done(ICMPv6 types 130/131/132)
+
+Multicast Listener Discovery(MLD) provides management of multicast addresses
+on links using IPv6. It is similar to the IGMP protocol used by IPv4.
+
+### Neighbor Discovery in IPv6
+
+The Neighbor Discovery Protocol in IPv6(sometimes abbreviated as NDP or ND)
+brings together the Router Discovery and Redirect mechanisms of ICMPv4 with
+the address-mapping capabilities provided by ARP.
+
+#### ICMPv6 Router Solicitation and Advertisement (ICMPv6 Types 133, 134)
+
+Router Advertisement (RA) messages indicate the presence and capabilities of a
+nearby router. They are sent periodically by routers, or in response to a
+Router Solicitation(RS) message. The RS message is used to induce on-link
+routers to send RA messages.
+
+#### ICMPv6 Neighbor Solicitation and Advertisement (ICMPv6 Types 135, 136)
+
+The Neighbor Solicitation(NS) message in ICMPv6 effectively replaces the ARP
+request messages used with IPv4. Its primary purpose is to convert IPv6
+addresses to link-layer addresses. However, it is also used for detecting
+whether nearby nodees can be reached, and they can be reached bidirectionally.
+
+The ICMPv6 Neighbor Advertisement(NA) message serves the purpose of the ARP
+response message in IPv4 in addition to helping with neighbor unreachability
+detection.
+
+#### ICMPv6 Inverse Neighbor Discovery Solicitation/Advertisement (ICMPv6 types 141, 142)
+
+The Inverse Neighbor Discovery(IND) facility in IPv6 originated from a need to
+determine IPv6 addresses given link-layer addresses on Frame Relay networks.
+It resembles reverse ARP, a protocol once used with IPv4 networks primarily
+for supporting diskless computers. Its main function is to ascertain the
+network-layer addresses correspending to a known link-layer address.
+
+#### Neighbor Unreachability Detection(NUD)
+
+One of the important features of ND is to detect when reachability between
+two systems on the same link has become lost or asymmetric. This is
+accomplished using the Neighbor Unreachability Detection(NUD) algorithm. It is
+used to manage the neighbor cache present on each node.
+
+### Attacks involving ICMP
+
+The types of attacks involving ICMP fall primarily into three categories:
+floods, bombs, and information disclosure. In essence, floods cause a large
+amout of traffic to be generated, leading to an effective DoS attack on one or
+more computers. The bomb class(sometimes called nuke class) refers to sending
+specially constructed messages that cause IP or ICMP processing to crash or
+hang. Information disclosure attacks do not typically cause harm by themselves
+but can be used to inform the approaches used by other attack methods to avoid
+wasting time or avoid being detected.
