@@ -418,3 +418,56 @@ specially constructed messages that cause IP or ICMP processing to crash or
 hang. Information disclosure attacks do not typically cause harm by themselves
 but can be used to inform the approaches used by other attack methods to avoid
 wasting time or avoid being detected.
+
+
+## Broadcasting and Local Multicasting(IGMP and MLD)
+
+There are four kinds of IP addresses: unicast, anycast, multicast, and
+broadcast. IPv4 may use all of them, and IPv6 uses any except the last form.
+
+Generally, only users applications that use the UDP transport protocol take
+advantage of broadcasting and multicasting, where it makes sense for an
+application to send a single message to multiple recipients. TCP is a
+connection-oriented protocol that implies a connection between two hosts and
+one process on each host. TCP can use unicast and anycast addresses, but not
+broadcast or multicast addresses.
+
+### Multicast
+
+IP multicasting originated using a design based on the way group addressing
+works in link-layer ntworks such as Ethernet. In this approach, each station
+selects the group address for which it is willing to accept traffic,
+irrespective of sender. This approach is also sometimes called any-source
+multicast(ASM) because of the insensitivity to the identity of the sender. As
+IP multicasting has evolved, an alternative form that is sensitive to the
+identity of the sender called source-specific multicast(SSM) has been developed
+that allows end stations to explicitly include or exclude traffic sent to a
+multicast group from a particular set of senders.
+
+> SSM brings several important benefits over ASM. Because an SSM channel is
+> defined by both a source and a group address, group addresses can be re-used
+> by multiple sources while keeping channels unique. For instance, the SSM
+> channel (192.168.45.7, 232.7.8.9) is different than (192.168.3.104,
+> 232.7.8.9), and hosts subscribed to one will not receive traffic from the
+> other. This allows for greater flexibility in choosing a multicast group
+> while also protecting against denial of service attacks; hosts will only
+> receive traffic from explicitly requested sources.
+>
+> One of the biggest advantages SSM holds over ASM is that it does not rely
+> on the designation of a rendezvous point (RP) to establish a multicast
+> tree. Because the source of an SSM channel is always known in advance,
+> multicast trees are efficiently built from channel hosts toward the source
+> (based on the unicast routing topology) without the need for an RP to join
+> a source and shared multicast tree. The corollary of this, which may be
+> undesirable in some multicast implementations, is that the multicast
+> source(s) must be learned in advance via some external method (e.g. manual
+> configuration).
+>
+> refs:
+>
+>   * http://packetlife.net/blog/2010/jul/27/source-specific-multicast-pim-ssm/
+>
+>   * http://packetlife.net/blog/2008/oct/20/pim-sm-source-versus-shared-trees/
+
+### Host Address Filtering
+
