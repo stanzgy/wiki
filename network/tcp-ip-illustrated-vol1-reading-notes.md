@@ -471,3 +471,52 @@ multicast group from a particular set of senders.
 
 ### Host Address Filtering
 
+In a typical switched Ethernet environment, broadcast and multicast frames are
+replicated on all segments within a VLAN, along a spanning tree formed among
+the switches. Such frames are delivered to the NIC on each host which checks
+the correctness of the frame(using the CRC) and makes a decision about whether
+to receive the frame and deliver it to the device driver and network stack.
+
+One of the primary motivations behind the development of the multicast
+addressing features was to avoid the overhead of broadcasting.
+
+### The Internet Group Management Protocol(IGMP) and Multicast Listener Discovery Protocol(MLD)
+
+When multicast datagrams are to be forwarded over a wide area network or within
+an enterprise across multiple subnets, we require that *multicast routing* be
+enabled by one or more multicast routers.
+
+*Reverse Path Forwarding*(RPF) check procedure performs a routing lookup on the
+source address of an arriving multicast datagram. Only if the outgoing
+interface for routing matches the interface on which the datagram arrived is
+the datagram forwarded. The RPF check is important for avoiding multicast
+loops. Multicast routing is largely separate from conventional unicast routing
+provided by IP routers.
+
+Two major protocols are used to allow multicast routers to learn the groups in
+which nearby hosts are interested: the Internet Group Management Protocol(IGMP)
+used by IPv4 and the Multicast Listener Discovery(MLD) protocol used by IPv6.
+Both are used by hosts and routers that support multicasting, and the protocols
+are very similar.
+
+> All Hosts multicast address: 224.0.0.1(IGMP)
+> All Nodes link-scope multicast address: ff02::1(MLD)
+
+The IGMP message TTL is set to 1, as IGMP messages are not forwarded through
+routers.
+
+### IGMP and MLD Snooping
+
+IGMP and MLD manage the flow of IP multicast traffic among routers. To optimize
+traffic flow even further, it is possible for layer 2 switches(that would not
+ordinarily process layer 3 IGMP or MLD messages) to become aware of whether
+certain multicast traffic flows are of interest or not by looking at layer 3
+information. This capability is indicated by a switch feature known as
+IGMP(MLD) *snooping* and is supported by many switch vendors.
+
+### Attacks Involving IGMP and MLD
+
+Because IGMP and MLD are signaling protocols that control the flow of multicast
+traffic, attacks using these protocols primarily are either DoS attacks or
+resource utilization attacks.
+
