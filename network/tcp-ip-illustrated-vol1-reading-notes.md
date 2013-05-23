@@ -520,3 +520,73 @@ Because IGMP and MLD are signaling protocols that control the flow of multicast
 traffic, attacks using these protocols primarily are either DoS attacks or
 resource utilization attacks.
 
+
+## User Datagram Protocol(UDP) and IP Fragmentation
+
+UDP is a simple, datagram-oriented, transport-layer protocol that preserves
+message boundaries. It does not provide error correction, sequencing, duplicate
+elimination, flow control, or congestion control.
+
+Generally, each UDP output operation requested by an application produces
+exactly one UDP datagram, which causes one IP datagram to be sent. This is in
+contrast to a stream-oriented protocol such as TCP, where the amount of data
+written by an application may have little relationship to what actually gets
+sent in a single IP datagram or what is consumed at the receiver.
+
+### UDP Header
+
+UDP header is always 8 bytes in size.
+
+    source port number: 2 bytes
+    destination port number: 2 bytes
+    length: 2 bytes
+    checksum: 2 bytes
+
+### UDP Checksum
+
+Transport protocols(e.g. TCP, UDP) use checksums to cover their their headers
+and data. With UDP, the checksum is optional(although strongly suggested),
+while with the others it is mandatory.
+
+Although the basics for calculating the UDP checksum are similar to the general
+Internet checksum, there are two small special details.
+
+* First, the length of the UDP datagram can be an odd number of bytes, whereas
+  the checksum algorithm adds 16-bit words(always an even number of bytes). The
+  procedure for UDP is to append a (virtual) pad byte of 0 to the end of
+  odd-length datagrams, just for the checksum computation and verification.
+  This pad byte is not actually transmitted and is thus called "virtual" here.
+
+* The second detail is that UDP(as well as TCP) computes its checksum over a
+  12-byte pseudo-header derived(solely) from fields in the IPv4 header or a
+  40-byte pseudo-header derived from fields in the IPv6 header. This
+  pseudo-header is also virtual and is used only for purposes of the checksum
+  compuation(at both the sender and the receiver). It is never actually
+  transmitted. This pseudo-header includes the source and destination addresses
+  and *Protocol* or *Next Header* field from the IP header.
+
+Despite UDP checksums being optional in the original UDP specification, they
+are currently required to be enabled on hosts by default. During the 1980s some
+computer vendors turned off UDP checksums by default to speed up their
+implementation of Sun's Network File System(NFS), which uses UDP. While this
+might not cause problems in many cases because of the presence of layer 2 CRC
+protection (which is stronger than the Internet checksum), it is considered bad
+form (and a violation of the RFCs) to disable checksums by default. Early
+experience in the Internet revealed that when datagrams pass through routers,
+all bets are off with respect to their correctness. Believe it or not, there
+have been routers with software and hardware bugs that have modified bits in
+the datagrams being forwarded. These errors are undetectable in a UDP datagram
+if the end-to-end UDP checksum is disabled. Also realize that some older
+data-link protocols (e.g., serial line IP, or SLIP) do not have any form of
+data-link checksum, thereby leaving open the possibility that IP packets could
+be undetectably modified unless another checksum is employed.
+
+Given the structure of the pseudo-header, it is clear that when a UDP/IPv4
+datagram passes through a NAT, not only is the IP-layer header checksum
+modified, but the UDP pseudo-header checksum must be appropriately modified
+because the IP-layer addressing and/or UDP-layer port numbers may have changed.
+NATs therefore routinely perform “layering violations” by modifying multiple
+layers of protocol within packets at the same time. Of course, given that the
+pseudo-header is itself a layering violation, a NAT has little choice.
+
+
