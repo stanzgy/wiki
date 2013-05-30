@@ -500,6 +500,7 @@ Both are used by hosts and routers that support multicasting, and the protocols
 are very similar.
 
 > All Hosts multicast address: 224.0.0.1(IGMP)
+
 > All Nodes link-scope multicast address: ff02::1(MLD)
 
 The IGMP message TTL is set to 1, as IGMP messages are not forwarded through
