@@ -589,4 +589,68 @@ NATs therefore routinely perform “layering violations” by modifying multiple
 layers of protocol within packets at the same time. Of course, given that the
 pseudo-header is itself a layering violation, a NAT has little choice.
 
+### UDP and IPv6
+
+In IPv6, the minimum MTU size is 1280 bytes(as opposed to the 576 bytes
+required by IPv4 as the minimum size required to be supported by all hosts).
+
+IPv6 supports jumbograms(packets larger than 65535 bytes). If we inspect the
+IPv6 header and option set, we can observe that with jumbograms, 32 bits are
+available to hold the payload length. This implies that a single UDP/IPv6
+datagram could be very large indeed.
+
+### Teredo: Tunneling IPv6 through IPv4 Networks
+
+Although it was once thought that a worldwide transition to IPv6 might happen
+quickly, this has not materialized exactly as forecast. Consequently, a number
+of (theoretically temporary) transition mechanisms have been proposed to ease
+the transition burden. One such machanism is called 6to4, whereby IPv6 packets
+used by hosts are encapsulated in IPv4 packets that may be delivered over an
+IPv4-only infrastructure.
+
+Teredo transports IPv6 datagrams in the payload area of UDP/IPv4 datagrams for
+systems that have no other IPv6 connectivity options.
+
+### IP Fragmentation
+
+To keep the IP datagram abstraction consistent and isolated from link-layer
+details, IP employs *fragmentation* and *reassembly*.
+
+Fragmentation in IPv4 can take place at the original sending host and at any
+intermediate routers along the end-to-end path. Note that datagram fragments
+can themselves be fragmented. Fragmentation in IPv6is somewhat different
+because only the source is permitted to perform fragmentation.
+
+When an IP datagram is fragmented, it is not reassembled until it reaches its
+final destination. Two reasons have been given for this. First, not performing
+reassembly within the network alleviates the forwarding software (or hardware)
+in routers from implementing this feature. Second, it is possible for different
+fragments of the same datagram to follow different paths to their common
+destination. If any fragment is lost, the entire datagram is lost.
+
+### Path MTU Discovery with UDP
+
+For a protocol such as UDP, in which the calling application is generally in
+control of the outgoing datagram size, it is useful if there is some way to
+determine an appropriate datagram size if gragmentation is to be avoided.
+Conventional PMTUD uses ICMP PTB messages in determining the largest packet
+size along a routing path that can be used without inducing fragmentation.
+
+### Lack of Flow and Congestion Control
+
+UDP provides no flow control(that is, no way for the server to tell the client
+to tell the client to slow down).
+
+UDP poses a special concern for congestion because it has no way of being
+informed that it should slow down its sending rate if the network is being
+driven into congestion. (It also has no mechanism for slowing down, even if it
+were told to do so.). Thus, it is said to lack congestion control.
+
+### Attacks Involving UDP and IP Fragmentation
+
+The most straightforward DoS attack with UDP is simply generating massive
+amounts of traffic as fast as possible. Because UDP does not regulate its
+sending traffic rate, this can negatively impact the performance of other
+applications sharing the same network path.
+
 
