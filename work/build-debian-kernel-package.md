@@ -12,15 +12,27 @@
 
     # aptitude install linux-source-3.2
 
+    # tar jxf /usr/src/linux-source-3.2.tar.bz2
+
 ## Apply your changes
 
-    # tar jxf /usr/src/linux-source-3.2.tar.bz2 .
+    # cd linux-source-3.2
 
     # make menuconfig
 
     # patch ...
 
+## Update package maintainer information
+
+    # sed -i 's/^maintainer \:=.*//' /etc/kernel-pkg.conf
+
+    # sed -i 's/^email \:=.*//' /etc/kernel-pkg.conf
+
+    # echo "maintainer := Zhang Gengyuan" >> /etc/kernel-pkg.conf
+
+    # echo "email := stan.zgy@gmail.com" >> /etc/kernel-pkg.conf
+
 ## Build kernel package
 
     # make-kpkg -j24 --rootcmd fakeroot --initrd --revision 3.2.41-2+netease1
-    --append_to_version -openstack-amd64 kernel_image
+      --append_to_version -openstack kernel_image
