@@ -655,3 +655,28 @@ sending traffic rate, this can negatively impact the performance of other
 applications sharing the same network path.
 
 
+## Name Resolution and the Domain Name System(DNS)
+
+### The DNS Name Space
+
+The set of all names used with DNS constitutes the DNS name space. The current
+DNS name space is a tree of domains with an unamed root at the top. The top
+echelons of the tree are the so-called top-level domains(TLDs), which include
+generic TLDs(gTLDs), country-code TLDs(ccTLDs), and internationalized
+country-code TLDs(IDN ccTLDs), plus a special infrastructure TLD called, for
+historical reasons, ARPA.
+
+### DNS Naming Syntax
+
+The names below a TLD in the DNS name tree are further partitioned into groups
+known as subdomains.
+
+Fully Qualified Domain Names(FQDNs) are sometimes written more formally with a
+trainling period(e.g., mit.edu.). This trailing period indicates that the name
+is complete; no additional information should be added to the name when
+performing a name resolution.
+
+### Name Servers and Zones
+
+
+
