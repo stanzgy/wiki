@@ -678,5 +678,13 @@ performing a name resolution.
 
 ### Name Servers and Zones
 
+The unit of administrative delegation, in the language of DNS servers, is
+called a zone. A zone is a subtree of the DNS name space that can be
+administered separately from other zones. Every domain name exists within some
+zone, even the TLDs that exist inthe root zone.
 
+### Caching
+
+Most name servers also cache zone information they learn, up to a time limit
+called the *time to live(TTL)*.
 
