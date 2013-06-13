@@ -7,7 +7,6 @@ Openstack 自动构建服务使用buildbot搭建, 构建任务分为两类:
 
 目前进行自动构建的项目: nova, glance, keystone, umbrella, postman, billing,
 sentry
-
 ## 每日构建
 
 每日构建, 每天晚上2:34会触发一次和project对应的构建任务.
@@ -55,5 +54,5 @@ SA在联调环境和QA测试环境部署了puppet,
 
 > weekly repo: `deb http://114.113.199.8:89/debian wheezy-weekly main`
 
-ppa源的使用可以参考[这篇文章](https://gitlab.hz.netease.com/hzzhanggy/wiki/blob/master/work/debian-ppa-howto.md)
+ppa源的使用可以参考[这篇文章](debian ppa howto)
 
