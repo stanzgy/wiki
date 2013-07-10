@@ -688,3 +688,115 @@ zone, even the TLDs that exist inthe root zone.
 Most name servers also cache zone information they learn, up to a time limit
 called the *time to live(TTL)*.
 
+
+## TCP: The Transmission Control Protocol(Preliminaries)
+
+### Windows of Packets and Sliding Windows
+
+We define a window of packets as the collection of packets(or their sequence
+numbers) that have been injected by the sender but not yet completely
+acknowledged(i.e., the sender has not received an ACK for them).
+
+We refer to the window size as the number of packets in the window.
+
+The movement of the window gives rise to another name for this type of
+protocol, a *sliding window* protocol.
+
+### Variable Windows: Flow Control and Congestion Control
+
+To handle the problem that arises when a reveiver is too slow relative to a
+sender, we introduce a way to force the sender to slow down when the receiver
+cannot keep up. This is called flow control and is usually handled in one of
+two ways. One way, called rate-based flow control, gives the sender a certain
+data rate allocation and ensures that data is never allowed to be sent at a
+rate that exceeds the allocation. This type of flow control is most appropriate
+for streaming applications and can be used with broadcast and multicast
+delivery.
+
+The other predominant form of flow control is called window-based flow control
+and is the most popular approach when sliding windows are being used. In this
+approach, the window size is not fixed but is instead allowed to vary over
+time. To achieve flow control using this tachnique, there must be a method for
+the receiver to signal the sender how large a window to use. This is typically
+called a *window advertisement*, or simply a *window update*. This value is
+used by the sender to adjust its window size. Logically, a window update is
+separate from the ACKs we discussed previously, but in practice the window
+update and ACK are carried in a single packet, meaning that the sender tends to
+adjust the size of its window at the same time it slides it to the right.
+
+We may have routers with limited memory between the sender and the receiver
+that have to contend with slow network links. When this happens, it is possible
+for the sender's rate to exceed a router's ability to keep up, leading to
+packet loss. This is addressed with a special form of flow control called
+congestion control.
+
+### Setting the Retransmission Timeout
+
+Because it is not practical for the user to tell the protocol implementation
+what the values of all the times are(or to keep them up-to-date) for all
+circumstances, a better strategy is to have the protocol implementation try to
+estimate them. This is called *round-trip-time estimation* and is a statistical
+process.
+
+### Introduction to TCP
+
+#### The TCP Service Model
+
+TCP provides a *connection-oriented*, reliable, byte stream service. The term
+*connection-oriented* means that the two applications using TCP must establish
+a TCP connection by contacting each other before they can exchange data.
+
+#### Reliability in TCP
+
+The application data is broken into what TCP considers the best-size chunks to
+send, typically fitting each segment into a single IP-layer datagram that will
+not be fragmented. This is different from UDP, where each write by the
+application usually generates a UDP datagram of that size(plus headers). The
+chunk passed by TCP to IP is called a *segment*.
+
+The ACKs used by TCP are *cumulative* in the sense that an ACK indicating byte
+number N implies that all bytes up to number N(but not including it) have
+already been received sucessfully.
+
+TCP provides a *full-duplex* service to the application layer. This means that
+data can be flowing in each direction, independent of the other direction.
+
+Using sequence numbers, a receiving TCP discards duplicate segments and
+reorders segments that arrive out of order. Because it is a byte stream
+protocol, however, TCP never delivers data to the receiving application out of
+order.
+
+### TCP Header and Encapsulation
+
+When a new connection is being established, the SYN bit field is turned on in
+the first segment sent from client to server. Such segments are called SYN
+segments, or simply SYNs. The *Sequence Number* field then contains the first
+sequence number to be used on that direction of the connection for subsequent
+sequence numbers and in returning ACK numbers(recall that connections are all
+bidirectional). Note that this number is not 0 or 1 but instead is another
+number, often randomly chosen, called the *initial sequence number*(ISN). The
+sequence number of the first byte of data sent on this direction of the
+connection is the ISN plus 1 because the SYN bit field consumes one sequence
+number.
+
+Modern TCPs, have a *selective acknowledgment*(SACK) option that allows the
+receiver to indicate to the sender out-of-order data it has received correctly.
+
+Currently eight bit fields are defined for the TCP header. One or more of them
+can be turned on at the same time.
+
+* CWR Congestion Window Reduced
+* ECE ECN Echo
+* URG Urgent
+* ACK Acknowledgement
+* PSH Push
+* RST Reset the connection
+* SYN Synchronize sequence numbers
+* FIN The sender of the segment is finished sending data to its peer
+
+The most common *Option* field is the Maximum Segment Size option, called the
+MSS. Each end of a connection normally specifies this option on the first
+segment it sends(the ones with the SYN bit field set to establish the
+connection). The MSS option specifies the maximum-size segment that the sender
+of the option is willing to receive in the reverse direction.
+
