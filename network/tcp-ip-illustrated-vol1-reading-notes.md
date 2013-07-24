@@ -800,3 +800,22 @@ segment it sends(the ones with the SYN bit field set to establish the
 connection). The MSS option specifies the maximum-size segment that the sender
 of the option is willing to receive in the reverse direction.
 
+## TCP Connection Management
+
+### Introduction
+
+TCP is a unicast *connection-oriented* protocol. TCP's service model is a byte
+stream.
+
+Because of its management of *connection state* (information about the
+connection kept by both endpoints), TCP is a considerably more complicated
+protocol than UDP. UDP is a *connectionless* protocol that involves no
+connection establishment or termination.
+
+### TCP Connection Establishment and Termination
+
+A TCP connection is defined to be a 4-tuple consisting of two IP addresses and
+two port numbers. More precisely, it is a pair of endpoints or sockets where
+each endpoint is identified by an (IP address, port number) pair.
+
+
