@@ -35,4 +35,4 @@
 ## Build kernel package
 
     # make-kpkg -j24 --rootcmd fakeroot --initrd --revision 3.2.41-2+netease1
-      --append_to_version -openstack kernel_image
+      --append_to_version -openstack-amd64 kernel_image
