@@ -818,4 +818,48 @@ A TCP connection is defined to be a 4-tuple consisting of two IP addresses and
 two port numbers. More precisely, it is a pair of endpoints or sockets where
 each endpoint is identified by an (IP address, port number) pair.
 
+    Active Opener(Client) | Passive Opener(Server)
+    ---> SYN, Seq=ISN(c), (options)
+    <--- SYN+ACK, Seq=ISN(s), ACK=ISN(c)+1, (options)
+    ---> ACK, Seq=ISN(c)+1, ACK=ISN(s)+1, (options)
+
+    ---> FIN+ACK, Seq=K, ACK=L, (options)
+    <--- ACK, Seq=L, ACK=K+1, (options)
+    <--- FIN+ACK, Seq=L, ACK=K+1, (options)
+    ---> ACK, Seq=K, ACK=L+1, (options)
+
+The half-close operation in TCP closes only a single direction of the data
+flow. Two half-close operations together close the entire connection. The
+sending of a FIN is normally the result of the application issueing a close
+operation, which typically causes both directions to close.
+
+### TCP Half-Close
+
+The Berkeley sockets API supports half-close, if the application calls the
+shutdown() function instead of calling the more typical close() function.
+
+    Active Opener(Client) | Passive Opener(Server)
+    ---> FIN+ACK, Seq=K, ACK=L, (options)
+    <--- ACK, Seq=L, ACK=K+1, (options)
+    <--- [More Data Sent]
+    ---> [Data Acknowledged]
+    <--- FIN, Seq=L, ACK=K+1, (options)
+    ---> ACK, Seq=K, ACK=L+1, (options)
+
+### Simultaneous Open and Close
+
+It's possible for two applications to perform an active open to each other at
+the same time. Each end must have transmitted a SYN before receiving a SYN from
+the other side; the SYNs must pass each other on the network. This scenario
+also requires each end to have an IP address and port number that are known to
+the other end, which is rare. If this happens, it is called a simultaneous
+open.
+
+### Initial Sequence Number(ISN)
+
+RFC0793 specifies that the ISN should be viewed as a 32-bit counter that
+increments by 1 every 4us. The purpose of doing this is to arrange for the
+sequence numbers for segments on one connection to not overlap with sequence
+numbers on a another (new) identical connection.
+
 
