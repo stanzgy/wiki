@@ -1,58 +1,116 @@
 # Openstack 自动构建服务说明
 
-Openstack 自动构建服务使用buildbot搭建, 构建任务分为两类:
+## 简介
 
-* 每日构建
-* 每周构建
+Openstack 自动构建服务使用buildbot搭建, 目前针对Openstack的Folsom与Havana两个
+发行版做不同策略的自动构建.
 
-目前进行自动构建的项目: nova, glance, keystone, umbrella, postman, billing,
-sentry
+Folsom发行版Openstack自动构建任务为:
+
+* 每日构建(QA环境)
+* 触发构建(演练环境)
+
+Folsom发行版进行自动构建的项目: nova, glance, keystone, umbrella, postman,
+billing, sentry, python-novaclient, python-glanceclient, python-keystoneclient,
+python-nosclient.
+
+Havana发行版Openstack自动构建任务为:
+
+* 每日构建(QA环境)
+* 每日构建(联调环境)
+* 触发构建(演练环境)
+
+Havana发行版目前进行自动构建的项目: nova, glance, keystone, monitor, umbrella.
+
+
 ## 每日构建
 
 每日构建, 每天晚上2:34会触发一次和project对应的构建任务.
 
-如果当天project对应的git仓库有新提交的commit, 则构建任务会自动为项目制作新的
-deb安装包并导入每日构建的ppa源中; project没有新提交的commit时则不会制作新的deb
-安装包.
+如果当天项目对应分支的git仓库有新提交的commit, 则构建任务会自动为项目制作新
+的deb安装包并导入每日构建的源中; 项目git仓库没有提交新的commit时则不会制作新的
+deb 安装包.
 
-每日构建自动生成的deb包的版本模板是
-[prefix]+`` `date +%Y%m%d`.git`git rev-parse --short HEAD`.nightly-1``,
-e.g. `2012.2+netease.20130513.git940d99a.nightly-1`.
+每日构建自动生成的deb包版本的模板为
 
-如果添加了多个源时, 请注意确认openstack相关的包的版本.
+    PREFIX+`date +%Y%m%dT%H%M`.git`git rev-parse --short HEAD`.nightly.SUFFIX-1
 
-## 每周构建
+其中PREFIX为上游版本号(如果有的话), SUFFIX为st或it(表示QA环境/联调环境)
 
-每周构建, 每当project提交的commit中修改了`nt_version.py`文件时,
-会触发对应的构建任务, 为相应的project制作新的deb安装包.
+例如
 
-我们每周固定的时间更新`nt_version.py`文件, 就能每周自动触发相应的构建任务.
+    2013.2+netease.20131231T0236.git35bd7bf.nightly.st-1
+    20131231T1107.git678535b.nightly.it-1
 
-每日构建自动生成的deb包的版本模板是
-`[prefix]+[nt_version].weekly-1`, e.g. `2012.2+netease.1.0.2.weekly-1`.
 
-如果添加了多个源时, 请注意确认openstack相关的包的版本.
+## 触发构建
+
+触发构建, 每当project提交的commit中修改了`nt_version.py`文件内的版本号时,
+会触发构建任务, 为项目制作新的deb安装包.
+
+触发构建自动生成的deb包版本的模板为
+
+    PREFIX+`find . -type f -name nt_version.py -exec sed -r "s/.*([0-9]+\\.[0-9]+\\.[0-9]+).*/\\1/" {} \+`-1
+
+其中PREFIX为上游版本号(如果有的话).
+
+例如
+
+    2013.2+netease.2.0.7-1
+    1.0.3-1
+
 
 ## 自动部署
 
-SA在联调环境和QA测试环境部署了puppet,
-并配置puppet自动更新openstack相关的包到最新的版本.
+SA在QA环境, 联调环境和演练环境都部署了puppet, 并配置puppet自动更新openstack
+相关的包到最新的版本.
 
-每日构建的deb安装包自动制作完成以后, 会在半小时内自动更新到QA测试环境.
+自动构建生成的deb安装包由buildbot自动制作完成以后, 会通过puppet每日清晨自动
+更新部署到相应的环境上.
 
-每周构建的deb安装包自动制作完成以后, 会在半小时内自动更新到联调环境.
+
+## 源配置
+
+需要使用1.1.4+netease1-2版本libvirt, 需要单独添加源
+
+    deb http://114.113.199.8:82/debian wheezy-libvirt-backports main contrib non-free
+
+### Folsom版本QA环境(24, 25)
+
+    deb http://114.113.199.8:82/debian wheezy-folsom-backports main contrib non-free
+    deb http://114.113.199.8:82/debian wheezy-folsom-nightly main contrib non-free
+
+### Folsom版本联调环境(obsolete)
+
+    deb http://114.113.199.8:82/debian wheezy-folsom-backports main contrib non-free
+    deb http://114.113.199.8:82/debian wheezy-folsom-testing main contrib non-free
+
+### Folsom版本演练环境(28, 29, 40)
+
+    deb http://114.113.199.8:82/debian wheezy-folsom-backports main contrib non-free
+    deb http://114.113.199.8:82/debian wheezy-folsom-rc main contrib non-free
+
+### Havana版本QA环境(7, 21, 22)
+
+    deb http://114.113.199.8:82/debian wheezy-havana-backports main contrib non-free
+    deb http://114.113.199.8:82/debian wheezy-havana-nightly main contrib non-free
+
+### Havana版本联调环境(11, 12, 13, 37, 38, 39)
+
+    deb http://114.113.199.8:82/debian wheezy-havana-backports main contrib non-free
+    deb http://114.113.199.8:82/debian wheezy-havana-testing main contrib non-free
+
+### Havana版本演练环境(暂无)
+
+    deb http://114.113.199.8:82/debian wheezy-havana-backports main contrib non-free
+    deb http://114.113.199.8:82/debian wheezy-havana-rc main contrib non-free
+
 
 ## Links
 
 > buildbot waterfall page: http://114.113.199.8:8088/waterfall
 
-> auto build archives: http://114.113.199.8:83
+> build archives: http://114.113.199.8:82/archives/
 
-> stable repo: `deb http://114.113.199.8:82/debian wheezy main`
-
-> nightly repo: `deb http://114.113.199.8:88/debian wheezy-nightly main`
-
-> weekly repo: `deb http://114.113.199.8:89/debian wheezy-weekly main`
-
-ppa源的使用可以参考[这篇文章](debian ppa howto)
+> opstanck ppa源的使用可以参考[这篇文章](debian ppa howto)
 
