@@ -71,9 +71,11 @@ SA在QA环境, 联调环境和演练环境都部署了puppet, 并配置puppet自
 
 ## 源配置
 
-需要使用1.1.4+netease1-2版本libvirt, 需要单独添加源
+需要使用打过我们补丁的1.1.4版本libvirt, 需要单独添加源
 
     deb http://114.113.199.8:82/debian wheezy-libvirt-backports main contrib non-free
+
+**请注意, 添加该源安装libvirt, 会导致libc升级到2.17**
 
 ### Folsom版本QA环境(24, 25)
 
