@@ -862,4 +862,9 @@ increments by 1 every 4us. The purpose of doing this is to arrange for the
 sequence numbers for segments on one connection to not overlap with sequence
 numbers on a another (new) identical connection.
 
+### Connections and Translators
+
+When NAT is used with TCP, the pseudo-header checksum usually requires
+adjustment. This is also true for other protocols that use pseudo-header
+checksums.
 
