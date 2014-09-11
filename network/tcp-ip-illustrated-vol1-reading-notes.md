@@ -833,7 +833,7 @@ flow. Two half-close operations together close the entire connection. The
 sending of a FIN is normally the result of the application issueing a close
 operation, which typically causes both directions to close.
 
-### TCP Half-Close
+#### TCP Half-Close
 
 The Berkeley sockets API supports half-close, if the application calls the
 shutdown() function instead of calling the more typical close() function.
@@ -846,7 +846,7 @@ shutdown() function instead of calling the more typical close() function.
     <--- FIN, Seq=L, ACK=K+1, (options)
     ---> ACK, Seq=K, ACK=L+1, (options)
 
-### Simultaneous Open and Close
+#### Simultaneous Open and Close
 
 It's possible for two applications to perform an active open to each other at
 the same time. Each end must have transmitted a SYN before receiving a SYN from
@@ -855,14 +855,14 @@ also requires each end to have an IP address and port number that are known to
 the other end, which is rare. If this happens, it is called a simultaneous
 open.
 
-### Initial Sequence Number(ISN)
+#### Initial Sequence Number(ISN)
 
 RFC0793 specifies that the ISN should be viewed as a 32-bit counter that
 increments by 1 every 4us. The purpose of doing this is to arrange for the
 sequence numbers for segments on one connection to not overlap with sequence
 numbers on a another (new) identical connection.
 
-### Connections and Translators
+#### Connections and Translators
 
 When NAT is used with TCP, the pseudo-header checksum usually requires
 adjustment. This is also true for other protocols that use pseudo-header
