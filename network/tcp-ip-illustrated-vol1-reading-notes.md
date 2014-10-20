@@ -868,3 +868,92 @@ When NAT is used with TCP, the pseudo-header checksum usually requires
 adjustment. This is also true for other protocols that use pseudo-header
 checksums.
 
+### TCP Options
+
+Every option begins with a 1-byte kind that specifies the type of option.
+Options that are not understood are simply ignored.
+
+TCP header's length is always required to be a multiple of 32 bits because the
+TCP Header Length field uses that unit.
+
+#### Maximum Segment Size (MSS) Option
+
+The maximum segment size (MSS) is the largest segment that a TCP is willing to
+receive from its peer and, consequently, the largest size its peer should ever
+use when sending. The MSS value counts only TCP data bytes and does not include
+the sizes of any associated TCP or IP header. When a connection is established,
+each end usually announces its MSS in an MSS option carried with its SYN
+segment.
+
+#### Selective Acknowledgment (SACK) Options
+
+Because TCP uses cumulative ACKs, TCP is never able to acknowledge data it has
+received correctly but that is not contiguous, in terms of sequence numbers,
+with data it has received previously. In such cases, the TCP receiver is said
+to have holes in its received data queue.
+
+A TCP learns that its peer is capable of advertising SACK information by
+receiving the SACK-Permitted option in a SYN (or SYN + ACK) segment.
+
+SACK information contained in a SACK option consists of a range of sequence
+numbers representing data blocks the receiver has successfully received. Each
+range is called a SACK block and is represented by a pair of 32-bit sequence
+numbers. Thus, a SACK option containing n SACK blocks is (8n + 2) bytes long.
+Two bytes are used to hold the kind and length of the SACK option.
+
+Although the SACK-Permitted option is only ever sent in a SYN segment, the
+SACK blocks themselves may be sent in any segment once the sender has sent the
+SACK-Permitted option.
+
+#### Window Scale (WSCALE or WSOPT) Option
+
+The Window Scale option (denoted WSCALE or WSOPT) [RFC1323] effectively
+increases the capacity of the TCP Window Advertisement field from 16 to about
+30 bits. Instead of changing the field size, however, the header still holds a
+16-bit value, and an option is defined that applies a scaling factor to the
+16-bit value. This, in effect, multiplies the window value by the value 2s,
+where s is the scale factor. The 1-byte shift count is between 0 and 14
+(inclusive). A shift count of 0 indicates no scaling. The maximum scale value
+of 14 provides for a maximum window of 1,073,725,440 bytes (65,535 × 214),
+close to 1,073,741,823 (230 −1), effectively 1GB. TCP then maintains the “real”
+window size internally as a 32-bit value.
+
+This option can appear only in a SYN segment, so the scale factor is fixed in
+each direction when the connection is established.
+
+#### Timestamps Option and Protection against Wrapped Sequence Numbers (PAWS)
+
+The Timestamps option (sometimes called the Timestamp option and written as
+TSOPT or TSopt) lets the sender place two 4-byte timestamp values in every
+segment. The receiver reflects these values in the acknowledgment, allowing the
+sender to calculate an estimate of the connection’s RTT for each ACK received.
+
+When using the Timestamps option, the sender places a 32-bit value in the
+Timestamp Value field (called TSV or TSval) in the first part of the TSOPT, and
+the receiver echoes this back unchanged in the second Timestamp Echo Retry
+field (called TSER or TSecr). TCP headers containing this option increase by 10
+bytes (8 bytes for the two timestamp values and 2 to indicate the option value
+and length).
+
+The PAWS algorithm does not require any form of time synchronization between
+the sender and the receiver. All the receiver needs is for the timestamp values
+to be monotonically increasing, and to increase by at least 1 per window of
+data.
+
+#### User Timeout (UTO) Option
+
+The UTO value (also called USER_TIMEOUT) specifies the amount of time a TCP
+sender is willing to wait for an ACK of outstanding data before con- cluding
+that the remote end has failed. USER_TIMEOUT has traditionally been a local
+configuration parameter for TCP.
+
+#### Authentication Option (TCP-AO)
+
+TCP Authentication Option (TCP-AO) uses a cryptographic hash algorithm (see
+Chapter 18), in combination with a secret value known to each end of a TCP
+connection, to authenticate each segment.
+
+This option is intended as a strong countermea- sure to a variety of TCP
+spoofing attacks. However, because it requires creation and distribution of a
+shared key (and is a relatively new option), it is not yet widely deployed.
+
