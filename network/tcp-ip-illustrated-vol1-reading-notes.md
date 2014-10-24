@@ -943,7 +943,7 @@ data.
 #### User Timeout (UTO) Option
 
 The UTO value (also called USER_TIMEOUT) specifies the amount of time a TCP
-sender is willing to wait for an ACK of outstanding data before con- cluding
+sender is willing to wait for an ACK of outstanding data before concluding
 that the remote end has failed. USER_TIMEOUT has traditionally been a local
 configuration parameter for TCP.
 
@@ -953,7 +953,102 @@ TCP Authentication Option (TCP-AO) uses a cryptographic hash algorithm (see
 Chapter 18), in combination with a secret value known to each end of a TCP
 connection, to authenticate each segment.
 
-This option is intended as a strong countermea- sure to a variety of TCP
-spoofing attacks. However, because it requires creation and distribution of a
-shared key (and is a relatively new option), it is not yet widely deployed.
+This option is intended as a strong countermeasure to a variety of TCP spoofing
+attacks. However, because it requires creation and distribution of a shared key
+(and is a relatively new option), it is not yet widely deployed.
+
+### Path MTU Discovery with TCP
+
+Knowing the path MTU can help protocols such as TCP avoid fragmentation.
+Discovery of the path MTU (PMTUD) is accomplished based on ICMP messages, but
+in that case UDP is not usually able to adapt its datagram size because the
+application specifies the size (i.e., not the transport protocol).
+
+When a connection is established, TCP uses the minimum of the MTU of the
+outgoing interface, or the MSS announced by the other end, as the basis for
+selecting its send maximum segment size (SMSS). PMTUD does not allow TCP to
+exceed the MSS announced by the other end.
+
+There are a number of problems with PMTUD when it operates in an Internet
+environment with firewalls that block PTB messages [RFC2923]. Of the various
+operational problems with PMTUD, black holes have been the most problematic.
+
+### TCP State Transitions
+
+#### TCP State Transition Diagram
+
+read the diagram
+
+#### TIME_WAIT (2MSL Wait) State
+
+The TIME_WAIT state is also called the 2MSL wait state. It is a state in which
+TCP waits for a time equal to twice the Maximum Segment Lifetime (MSL),
+sometimes called timed wait. Every implementation must choose a value for the
+MSL. It is the maximum amount of time any segment can exist in the network
+before being discarded.
+
+When TCP performs an active close and sends the final ACK, that connection must
+stay in the TIME_WAIT state for twice the MSL. This lets TCP resend the final
+ACK in case it is lost. The final ACK is resent not because the TCP retransmits
+ACKs (they do not consume sequence numbers and are not retransmitted by TCP),
+but because the other side will retransmit its FIN (which does consume a
+sequence number). Indeed, TCP will always retransmit FINs until it receives a
+final ACK.
+
+Another effect of this 2MSL wait state is that while the TCP implementation
+waits, the endpoints defining that connection (client IP address, client port
+number, server IP address, and server port number) cannot be reused. That
+connection can be reused only when the 2MSL wait is over, or when a new
+connection uses an ISN that exceeds the highest sequence number used on the
+previous instantiation of the connection [RFC1122], or if the use of the
+Timestamps option allows the disambiguation of segments from a previous
+connection instantiation to not otherwise be confused [RFC6191].
+
+Most implementations and APIs provide a way to bypass this restriction. With
+the Berkeley sockets API, the SO_REUSEADDR socket option enables the bypass
+operation.
+
+For interactive applications, it is normally the client that does the active
+close and enters the TIME_WAIT state. The server usually does the passive close
+and does not go through the TIME_WAIT state.
+
+With servers, however, the situation is different. They almost always use well-
+known ports. If we terminate a server process that has a connection established
+and immediately try to restart it, the server cannot assign its assigned port
+number to its endpoint (it gets an “Address already in use” binding error),
+because that port number is part of a connection that is in a 2MSL wait state.
+
+#### Quiet Time Concept
+
+[RFC0793] states that TCP should wait an amount of time equal to the MSL before
+creating any new connections after a reboot or crash. This is called the quiet
+time.
+
+#### FIN_WAIT_2 State
+
+In the FIN_WAIT_2 state, TCP has sent a FIN and the other end has acknowledged
+it. Unless a half-close is being performed, the TCP must wait for the
+application on the other end to recognize that it has received an end-of-file
+notification and close its end of the connection, which causes a FIN to be
+sent. Only when the application performs this close (and its FIN is received)
+does the active closing TCP move from the FIN_WAIT_2 to the TIME_WAIT state.
+This means that one end of the connection can remain in this state forever. The
+other end is still in the CLOSE_WAIT state and can remain there forever, until
+the application decides to issue its close.
+
+Many implementations prevent this infinite wait in the FIN_WAIT_2 state as
+follows: If the application that does the active close does a complete close,
+not a half-close indicating that it expects to receive data, a timer is set. If
+the connection is idle when the timer expires, TCP moves the connection into
+the CLOSED state. In Linux, the variable net.ipv4.tcp_fin_timeout can be
+adjusted to control the number of seconds to which the timer is set. Its
+default value is 60s.
+
+#### Simultaneous Open and Close Transitions
+
+When a simultaneous open occurs, both ends send a SYN at about the same time,
+entering the SYN_SENT state. When each end receives its peer’s SYN segments,
+the state changes to SYN_RCVD, and each end resends a SYN and acknowledges the
+received SYN. When each end receives the SYN plus the ACK, the state changes to
+ESTABLISHED.
 
