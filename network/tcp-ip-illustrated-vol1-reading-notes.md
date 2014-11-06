@@ -7,7 +7,9 @@ when filtering both vlan tagged and untagged packets.
 
 "tcpdump -d" could dump the raw bpf filter in a human readable way. 
 
-> refs: http://www.christian-rossow.de/articles/tcpdump_filter_mixed_tagged_and_untagged_VLAN_traffic.php
+> refs:
+>
+>   [1] http://www.christian-rossow.de/articles/tcpdump_filter_mixed_tagged_and_untagged_VLAN_traffic.php
 
 
 ## bonding 802.1ax(formerly 802.3ad)
@@ -1044,6 +1046,66 @@ the CLOSED state. In Linux, the variable net.ipv4.tcp_fin_timeout can be
 adjusted to control the number of seconds to which the timer is set. Its
 default value is 60s.
 
+
+    Normal Close Sequence
+
+    TCP A                                                TCP B
+
+    ESTABLISHED                                          ESTABLISHED
+
+    (Close)
+    FIN-WAIT-1  --> <SEQ=100><ACK=300><CTL=FIN,ACK>  --> CLOSE-WAIT
+
+    FIN-WAIT-2  <-- <SEQ=300><ACK=101><CTL=ACK>      <-- CLOSE-WAIT
+
+    TIME-WAIT   <-- <SEQ=300><ACK=101><CTL=FIN,ACK>  <-- LAST-ACK
+
+    TIME-WAIT   --> <SEQ=101><ACK=301><CTL=ACK>      --> CLOSED
+
+    (2 MSL)
+    CLOSED
+
+
+##### FIN_WAIT_2 Problem
+
+In order for an HTTP server to reliably implement the protocol it needs to
+shutdown each direction of the communication independently. When this feature
+was added to Apache it caused a flurry of problems on various versions of Unix
+because of a shortsightedness. The TCP specification does not state that the
+FIN_WAIT_2 state has a timeout, but it doesn't prohibit it. On systems without
+the timeout, Apache 1.2 induces many sockets stuck forever in the FIN_WAIT_2
+state.
+
+In many cases this can be avoided by simply upgrading to the latest TCP/IP
+patches supplied by the vendor.
+
+
+Why Does It Happen?
+
+* The client opens a new connection to the same or a different site, which
+  causes it to fully close the older connection on that socket.
+* The user exits the client, which on some (most?) clients causes the OS to
+  fully shutdown the connection.
+* The FIN_WAIT_2 times out, on servers that have a timeout for this state.
+
+This is a bug in the browser or in its operating system's TCP implementation.
+
+
+What Can I Do About it?
+
+* Add a timeout for FIN_WAIT_2
+* Compile without using lingering_close() *NOT RECOMMENDED*
+* Use SO_LINGER as an alternative to lingering_close()
+* Increase the amount of memory used for storing connection state
+* Disable KeepAlive
+
+> refs:
+>
+>   [1] http://httpd.apache.org/docs/current/misc/perf-tuning.html
+>
+>   [2] http://httpd.apache.org/docs/2.0/misc/fin_wait_2.html
+
+
 #### Simultaneous Open and Close Transitions
 
 When a simultaneous open occurs, both ends send a SYN at about the same time,
@@ -1051,6 +1113,27 @@ entering the SYN_SENT state. When each end receives its peer’s SYN segments,
 the state changes to SYN_RCVD, and each end resends a SYN and acknowledges the
 received SYN. When each end receives the SYN plus the ACK, the state changes to
 ESTABLISHED.
+
+
+    Simultaneous Close Sequence
+
+    TCP A                                                TCP B
+
+    ESTABLISHED                                          ESTABLISHED
+
+    (Close)                                              (Close)
+    FIN-WAIT-1  --> <SEQ=100><ACK=300><CTL=FIN,ACK>  ... FIN-WAIT-1
+                <-- <SEQ=300><ACK=100><CTL=FIN,ACK>  <--
+                ... <SEQ=100><ACK=300><CTL=FIN,ACK>  -->
+
+    CLOSING     --> <SEQ=101><ACK=301><CTL=ACK>      ... CLOSING
+                <-- <SEQ=301><ACK=101><CTL=ACK>      <--
+                ... <SEQ=101><ACK=301><CTL=ACK>      -->
+
+    TIME-WAIT                                            TIME-WAIT
+    (2 MSL)                                              (2 MSL)
+    CLOSED                                               CLOSED
+
 
 ### Reset Segments
 
@@ -1086,4 +1169,60 @@ connection to be discarded.  If, however, it receives certain segments from the
 connection during this period, or more specifically an RST segment, it can
 become desynchronized. This is called TIME-WAIT Assassination (TWA) [RFC1337].
 
+### TCP Server Operation
 
+#### TCP Port Numbers
+
+TCP demultiplexes incoming segments using all four values that constitute the
+local and foreign endpoints: destination IP address, destination port number,
+source IP address, and source port number.
+
+#### Restricting Local IP Addresses
+
+The server application never sees the connection request. The rejection is done
+by the operating system’s TCP module, based on the local address specified by
+the application and the destination address contained in the arriving SYN seg-
+ment. 
+
+#### Restricting Foreign Endpoints
+
+Address and port number binding options available to a TCP server
+
+ Local Address  |    Foreign Address   |   Restricted to    | Comment
+----------------|----------------------|--------------------|---------
+ local_IP.lport | foraddr.foreign_port |     One client     | Not usually supported
+ local_IP.lport |        \*.\*         | One local endpoint | Unusual (used by DNS servers)
+ \*.local_port  |        \*.\*         |    One local port  | Most common; multiple address families (IPv4/IPv6) may be supported
+
+#### Incoming Connection Queue
+
+New connections may be in one of two distinct states before they are made
+available to an applica- tion. The first case is connections that have not yet
+completed but for which a SYN has been received (these are in the SYN_RCVD
+state). The second case is connections that have already completed the
+three-way handshake and are in the ESTABLISHED state but have not yet been
+accepted by the application. Internally, the operating system ordinarily has
+two distinct connection queues, one for each of these cases.
+
+Traditionally, using the Berkeley sockets API, an application had only indirect
+control of the sum of the sizes of these two queues. In modern Linux kernels
+this behavior has been changed to be the number of connections in the second
+case (ESTABLISHED connections).
+
+In Linux, then, the following rules apply:
+
+* When a connection request arrives (i.e., the SYN segment), the system-wide
+  parameter net.ipv4.tcp_max_syn_backlog is checked (default 1000).
+* Each listening endpoint has a fixed-length queue of connections that have
+  been completely accepted by TCP (i.e., the three-way handshake is complete)
+  but not yet accepted by the application. The application specifies a limit to
+  this queue, commonly called the backlog. This backlog must be between 0 and a
+  system-specific maximum called net.core.somaxconn, inclusive (default 128).
+* If there is room on this listening endpoint’s queue for this new connection,
+  the TCP module ACKs the SYN and completes the connection. The server
+  application with the listening endpoint does not see this new connection
+  until the third segment of the three-way handshake is received.
+* If there is not enough room on the queue for the new connection, the TCP
+  delays responding to the SYN, to give the application a chance to catch up.
+  Linux is somewhat unique in this behavior—it persists in not ignoring
+  incoming connections if it possibly can.
