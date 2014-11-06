@@ -1052,3 +1052,38 @@ the state changes to SYN_RCVD, and each end resends a SYN and acknowledges the
 received SYN. When each end receives the SYN plus the ACK, the state changes to
 ESTABLISHED.
 
+### Reset Segments
+
+In general, a reset is sent by TCP whenever a segment arrives that does not
+appear to be correct for the referenced connection.
+
+#### Connection Request to Nonexistent Port
+
+A common case for generating a reset segment is when a connection request
+arrives and no process is listening on the destination port. We saw this
+previously when we encountered the “connection refused” error messages. These
+are common with TCP. In the case of UDP, an ICMP Destination Unreachable (Port
+Unreachable) message is generated when a datagram arrives for a destination
+port that is not in use. TCP uses a reset segment instead.
+
+#### Aborting a Connection
+
+The normal way to terminate a connection is for one side to send a FIN. This is
+sometimes called an *orderly release*. It is also possible to abort a
+connection by sending a reset instead of a FIN at any time. This is sometimes
+called an *abortive release*.
+
+#### Half-Open Connections
+
+A TCP connection is said to be half-open if one end has closed or aborted the
+con- nection without the knowledge of the other end. This can happen anytime
+one of the peers crashes.
+
+#### TIME-WAIT Assassination (TWA)
+
+The TIME_WAIT state is intended to allow any datagrams lingering from a closed
+connection to be discarded.  If, however, it receives certain segments from the
+connection during this period, or more specifically an RST segment, it can
+become desynchronized. This is called TIME-WAIT Assassination (TWA) [RFC1337].
+
+
