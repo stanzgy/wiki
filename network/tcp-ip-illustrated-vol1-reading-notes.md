@@ -1020,6 +1020,10 @@ and immediately try to restart it, the server cannot assign its assigned port
 number to its endpoint (it gets an “Address already in use” binding error),
 because that port number is part of a connection that is in a 2MSL wait state.
 
+> refs:
+>
+>   [1] http://vincent.bernat.im/en/blog/2014-tcp-time-wait-state-linux.html
+
 #### Quiet Time Concept
 
 [RFC0793] states that TCP should wait an amount of time equal to the MSL before
