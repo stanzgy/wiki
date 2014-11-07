@@ -1226,3 +1226,31 @@ In Linux, then, the following rules apply:
   delays responding to the SYN, to give the application a chance to catch up.
   Linux is somewhat unique in this behavior—it persists in not ignoring
   incoming connections if it possibly can.
+
+#### Attacks Involving TCP Connection Management
+
+A SYN flood is a TCP DoS attack whereby one or more malicious clients generate
+a series of TCP connection attempts (SYN segments) and send them at a server,
+often with a “spoofed” (e.g., random) source IP address.
+
+One mechanism invented to deal with this issue is called SYN cookies
+[RFC4987]. The main insight with SYN cookies is that most of the information
+that would be stored for a connection when a SYN arrives could be encoded
+inside the Sequence Number field supplied with the SYN + ACK.
+
+Another type of degradation attack on TCP involves PMTUD. In this case, an
+attacker fabricates an ICMP PTB message containing a very small MTU value
+(e.g., 68 bytes). This forces the victim TCP to attempt to fit its data into
+very small packets, greatly reducing its performance.
+
+Another type of attack involves disrupting an existing TCP connection and
+possibly taking it over (called hijacking). These forms of attacks usually
+involve a first step of “desynchronizing” the two TCP endpoints so that if they
+were to talk to each other, they would be using invalid sequence numbers. They
+are particular examples of sequence number attacks [RFC1948].
+
+A collection of attacks generally called spoofing attacks involve TCP segments
+that have been specially tailored by an attacker to disrupt or alter the
+behavior of an existing TCP connection.
+
+
