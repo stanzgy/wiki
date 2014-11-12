@@ -1258,3 +1258,49 @@ that have been specially tailored by an attacker to disrupt or alter the
 behavior of an existing TCP connection.
 
 
+## TCP Timeout and Retransmission
+
+TCP has two separate mechanisms for accomplishing retransmission, one based on
+time and one based on the structure of the acknowledgments. The second approach
+is usually much more efficient than the first.
+
+TCP sets a timer when it sends data, and if the data is not acknowledged when
+the timer expires, a timeout or timer-based retransmission of data occurs. The
+timeout occurs after an interval called the *retransmission timeout* (RTO).
+
+It has another way of initiating a retransmission called fast retransmission or
+fast retransmit, which usually happens without any delay. Fast retransmit is
+based on inferring losses by noticing when TCP’s cumulative acknowledgment
+fails to advance in the ACKs received over time, or when ACKs carrying
+selective acknowledgment information (SACKs) indicate that out-of-order
+segments are present at the receiver.
+
+### Simple Timeout and Retransmission Example
+
+This doubling of time between successive retransmissions is called a *binary
+exponential backoff*.
+
+Logically, TCP has two thresholds to determine how persistently it will attempt
+to resend the same segment.  Threshold R1 indicates the number of tries TCP
+will make (or the amount of time it will wait) to resend a segment before
+passing “negative advice” to the IP layer (e.g., causing it to reevaluate the
+IP route it is using). Threshold R2 (larger than R1) dictates the point at
+which TCP should abandon the connection.
+
+### Setting the Retransmission Timeout (RTO)
+
+Because TCP sends acknowledgments when it receives data, it is possible to send
+a byte with a particular sequence number and measure the time required to
+receive an acknowledgment that covers that sequence number. Each such mea-
+surement is called an RTT sample. The challenge for TCP is to establish a good
+estimate for the range of RTT values given a set of samples that vary over
+time.
+
+Say a packet is transmitted, a timeout occurs, the packet is retransmitted, and
+an acknowledgment is received for it. Is the ACK for the first transmission or
+the second? This is an example of the retransmission ambiguity problem.
+
+TCP applies a backoff factor to the RTO, which doubles each time a subsequent
+retransmission timer expires.
+
+
