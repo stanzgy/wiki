@@ -1303,4 +1303,85 @@ the second? This is an example of the retransmission ambiguity problem.
 TCP applies a backoff factor to the RTO, which doubles each time a subsequent
 retransmission timer expires.
 
+### Timer-Based Retransmission
+
+TCP considers a timer-based retransmission as a fairly major event; it reacts
+very cautiously when it happens by quickly reducing the rate at which it sends
+data into the network. It does this in two ways. The first way is to reduce its
+sending window size based on congestion control procedures. The other way is to
+keep increasing a multiplicative backoff factor applied to the RTO each time a
+retransmitted segment is again retransmitted.
+
+### Fast Retransmit
+
+Fast retransmit [RFC5681] is a TCP procedure that can induce a packet
+retransmission based on feedback from the receiver instead of requiring a
+retransmission timer to expire.
+
+It is important to realize that TCP is required to generate an immediate
+acknowledgment (a “duplicate ACK”) when an out-of-order segment is received,
+and that the loss of a segment implies out-of- order arrivals at the receiver
+when subsequent data arrives. When this happens, a hole is created at the
+receiver. The sender’s job then becomes filling the receiver’s holes as quickly
+and efficiently as possible.
+
+### Retransmission with Selective Acknowledgments
+
+When the SACK option is being used, an ACK can be augmented with up to three or
+four SACK blocks that contain information about out-of-sequence data at the
+receiver.
+
+A SACK option that specifies n blocks has a length of 8n + 2 bytes, so the 40
+bytes available to hold TCP options can specify a maximum of four blocks. It is
+expected that SACK will often be used in conjunction with the TSOPT, which
+takes an additional 10 bytes (plus 2 bytes of padding), meaning that SACK is
+typically able to include only three blocks per ACK.
+
+### Spurious Timeouts and Retransmissions
+
+
+Under a number of circumstances, TCP may initiate a retransmission even when no
+data has been lost. Such undesirable retransmissions are called spurious
+retransmissions and are caused by spurious timeouts (timeouts firing too early)
+and other reasons such as packet reordering, packet duplication, or lost
+ACKs.
+
+#### Duplicate SACK (DSACK) Extension
+
+DSACK or D-SACK, which stands for duplicate SACK [RFC2883], is a rule, applied
+at the SACK receiver and interoperable with conventional SACK senders, that
+causes the first SACK block to indicate the sequence numbers of a duplicate
+segment that has arrived at the receiver. The main purpose of DSACK is to
+determine when a retransmission was not necessary and to learn additional facts
+about the network.
+
+#### The Eifel Detection Algorithm
+
+The experimental Eifel Detection Algorithm [RFC3522] deals with this problem
+using the TCP TSOPT to detect spurious retransmissions. After a retransmission
+timeout occurs, Eifel awaits the next acceptable ACK. If the next acceptable
+ACK indicates that the first copy of a retransmitted packet (called the
+original transmit) was the cause for the ACK, the retransmission is considered
+to be spurious.
+
+#### Forward-RTO Recovery (F-RTO)
+
+Forward-RTO Recovery (F-RTO) [RFC5682] is a standard algorithm for detecting
+spurious retransmissions. It does not require any TCP options, so when it is
+implemented in a sender, it can be used effectively even with an older
+receiver that does not support the TCP TSOPT. It attempts to detect only
+spurious retransmissions caused by expiration of the retransmission timer; it
+does not deal with the other causes for spurious retransmissions or
+duplications mentioned before.
+
+#### The Eifel Response Algorithm
+
+The Eifel Response Algorithm [RFC4015] is a standard set of operations to be
+executed by a TCP once a retransmission has been deemed spurious. Because the
+response algorithm is logically decoupled from the Eifel Detection Algorithm,
+it can be used with any of the detection algorithms we just discussed. The
+Eifel Response Algorithm was originally intended to operate for both
+timer-based and fast retransmit spurious retransmissions but is currently
+specified only for timerbased retransmissions.
+
 
