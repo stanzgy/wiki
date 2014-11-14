@@ -1384,4 +1384,78 @@ Eifel Response Algorithm was originally intended to operate for both
 timer-based and fast retransmit spurious retransmissions but is currently
 specified only for timerbased retransmissions.
 
+### Packet Reordering and Duplication
+
+#### Reordering
+
+
+Packet reordering can occur in an IP network because IP provides no guarantee
+that relative ordering between packets is maintained during delivery. This can
+be beneficial (to IP at least), because IP can choose another path for traffic
+(e.g., that is faster) without having to worry about the consequences that
+doing so may cause traffic freshly injected into the network to pass ahead of
+older traffic, resulting in the order of packet arrivals at the receiver not
+matching the order of transmission at the sender. There are other reasons
+packet reordering may occur.
+
+The reordering of data segments has a somewhat different effect on TCP as
+does reordering of ACK packets.  Because of asymmetric routing, it is
+frequently the case that ACKs travel along different network links (and through
+different routers) from data packets on
+the forward path.
+
+If reordering takes place in the reverse (ACK) direction, it causes the sending
+TCP to receive some ACKs that move the window significantly forward followed by
+some evidently old redundant ACKs that are discarded. This can lead to an
+unwanted burstiness (instantaneous high-speed sending) behavior in the sending
+pattern of TCP and also trouble in taking advantage of available network
+bandwidth, because of the behavior of TCP’s congestion control
+
+If fast retransmit were to be invoked whenever any duplicate ACK is received at
+the sender, a large number of unnecessary retransmissions would occur on
+network paths where a small amount of reordering is common. To handle this
+situation, fast retransmit is triggered only after the duplicate threshold
+(dupthresh) has been reached.
+
+#### Duplication
+
+Although rare, the IP protocol may deliver a single packet more than one time.
+This can happen, for example, when a link-layer network protocol performs a
+retransmission and creates two copies of the same packet. When duplicates are
+created, TCP can become confused in some of the ways we have seen already.
+
+#### Destination Metrics
+
+TCP “learns” the characteristics of the network path between the sender and the
+receiver over time. The learning is kept in state variables at the sender such
+as srtt and rttvar. Some TCP implementations also keep track of an estimate of
+the amount of packet reordering that has occurred recently along a path.rns”
+the characteristics of the network path between the sender and the receiver
+over time. The learning is kept in state variables at the sender such as srtt
+and rttvar. Some TCP implementations also keep track of an estimate of the
+amount of packet reordering that has occurred recently along a path.
+
+When a new connection is created, TCP consults the data structure to see if
+there is any preexisting information regarding the path to the destination host
+with which it will be communicating. If so, initial values for srtt, rttvar,
+and so on can be initialized to some value based on previous, relatively
+recent experience.
+
+#### Repacketization
+
+When TCP times out and retransmits, it does not have to retransmit the identi-
+cal segment. Instead, TCP is allowed to perform repacketization, sending a
+bigger segment, which can increase performance.
+
+#### Attacks Involving TCP Retransmission
+
+There is a class of DoS attack called low-rate DoS attacks [KK03]. In such an
+attack, an attacker sends bursts of traffic to a gateway or host, causing the
+victim system to experience a retransmission timeout. Given an ability to
+predict when the victim TCP will attempt to retransmit, the attacker generates
+a burst of traffic at each retransmission attempt. As a consequence, the victim
+TCP perceives congestion in the network, throttles its sending rate to near
+zero, keeps backing off its RTO according to Karn’s algorithm, and effectively
+receives very little network throughput.
+
 
