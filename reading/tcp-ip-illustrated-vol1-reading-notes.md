@@ -1459,3 +1459,34 @@ zero, keeps backing off its RTO according to Karn’s algorithm, and effectively
 receives very little network throughput.
 
 
+## TCP Data Flow and Window Management
+
+### Interactive Communication
+
+Studies of TCP traffic usually find that 90% or more of all TCP segments
+contain bulk data (e.g., Web, file sharing, electronic mail, backups) and the
+remaining portion contains interactive data (e.g., remote login, network
+games).
+
+Each interactive keystroke normally generates a separate data packet.
+Furthermore, *ssh* invokes a shell (command interpreter) on the remote system
+(the server), which echoes the characters that are typed at the client.
+
+A single typed character could thus generate four TCP segments: the inter-
+active keystroke from the client, an acknowledgment of the keystroke from the
+server, the echo of the keystroke from the server, and an acknowledgment of the
+echo from the client back to the server.
+
+### Delayed Acknowledgments
+
+Using a cumulative ACK allows TCP to intentionally delay sending an ACK for
+some amount of time, in the hope that it can combine the ACK it needs to send
+with some data the local application wishes to send in the other direction.
+This is a form of piggybacking that is used most often in conjunction with
+bulk data transfers.
+
+Delaying ACKs causes less traffic to be carried over the network than when ACKs
+are not delayed because fewer ACKs are used. A ratio of 2 to 1 is fairly com-
+mon for bulk transfers.
+
+
