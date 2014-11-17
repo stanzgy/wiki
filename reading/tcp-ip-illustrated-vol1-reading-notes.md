@@ -1489,4 +1489,38 @@ Delaying ACKs causes less traffic to be carried over the network than when ACKs
 are not delayed because fewer ACKs are used. A ratio of 2 to 1 is fairly com-
 mon for bulk transfers.
 
+### Nagle Algorithm
+
+When using IPv4, sending one single key press generates TCP/IPv4 packets of
+about 88 bytes in size (using the encryption and authentication from the
+example): 20 bytes for the IP header, 20 bytes for the TCP header (assuming no
+options), and 48 bytes of data. These small packets (called tinygrams) have a
+relatively high overhead for the network. A simple and elegant solution was
+proposed by John Nagle in [RFC0896], now called the *Nagle algorithm*.
+
+The Nagle algorithm says that when a TCP connection has outstanding data that
+has not yet been acknowledged, small segments (those smaller than the SMSS)
+cannot be sent until all outstanding data is acknowledged. Instead, small
+amounts of data are collected by TCP and sent in a single segment when an
+acknowledg- ment arrives. This procedure effectively forces TCP into
+stop-and-wait behavior—it stops sending until an ACK is received for any
+outstanding data. The beauty of this algorithm is that it is self-clocking: the
+faster the ACKs come back, the faster the data is sent. On a comparatively
+high-delay WAN, where reducing the number of tinygrams is desirable, fewer
+segments are sent per unit time. Said another way, the RTT controls the packet
+sending rate.
+
+The trade-off the Nagle algorithm makes: fewer and larger packets are used, but
+the required delay is higher.
+
+#### Delayed ACK and Nagle Algorithm Interaction
+
+The combination of delayed ACKs and the Nagle algorithm leads to a form of
+deadlock (each side waiting for the other). Fortunately, this deadlock is not
+permanent and is broken when the delayed ACK timer fires, which forces the
+client to provide an ACK even if the client has no additional data to send.
+However, the entire data transfer becomes idle during this deadlock period,
+which is usually not desirable. The Nagle algorithm can be disabled in such
+circumstances, as we saw with ssh.
+
 
