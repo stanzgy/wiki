@@ -1523,4 +1523,100 @@ However, the entire data transfer becomes idle during this deadlock period,
 which is usually not desirable. The Nagle algorithm can be disabled in such
 circumstances, as we saw with ssh.
 
+### Flow Control and Window Management
+
+When TCP-based applications are not busy doing other things, they are typically
+able to consume any and all data TCP has received and queued for them, leading
+to no change of the Window Size field as the connection progresses.
+
+On slow systems, or when the application has other things to accomplish, data
+may have arrived for the application, been acknowledged by TCP, and be sitting
+in a queue waiting for the application to read or “consume” it. When TCP starts
+to queue data in this way, the amount of space available to hold new incoming
+data decreases, and this change is reflected by a decreasing value of the
+Window Size field. Eventually, if the application does not read or otherwise
+consume the data at all, TCP must take some action to cause the sender to cease
+sending new data entirely, because there would be no place to put it on
+arrival. This is accomplished by sending a window advertisement of zero (no
+space).
+
+#### Sliding Windows
+
+Each endpoint of a TCP connection is capable of sending and receiving data. The
+amount of data sent or received on a connection is maintained by a set of
+window structures. For each active connection, each TCP endpoint maintains a
+send window structure and a receive window structure.
+
+Three terms are used to describe the movement of the right and left edges of
+the window:
+
+* The window closes as the left edge advances to the right. This happens when
+  data that has been sent is acknowledged and the window size gets smaller.
+* The window opens when the right edge moves to the right, allowing more data
+  to be sent. This happens when the receiving process on the other end reads
+  acknowledged data, freeing up space in its TCP receive buffer.
+* The window shrinks when the right edge moves to the left. The Host
+  Requirements RFC [RFC1122] strongly discourages this, but TCP must be able to
+  cope with it.
+
+If the left edge reaches the right edge, it is called a zero window. This stops
+the sender from transmitting any data. If this happens, the sending TCP begins
+to probe the peer’s window to look for an increase in the offered window.
+
+For the receiver, any bytes received with sequence numbers less than the left
+window edge (called RCV.NXT) are discarded as duplicates, and any bytes
+received with sequence numbers beyond the right window edge (RCV.WND bytes
+beyond RCV.NXT) are discarded as out of scope.
+
+Note that the ACK number generated at the receiver may be advanced only when
+segments fill in directly at the left window edge because of TCP’s cumulative
+ACK structure. With selective ACKs, other in-window segments can be
+acknowledged using the TCP SACK option, but ultimately the ACK number itself is
+advanced only when data contiguous to the left window edge is received
+
+#### Zero Windows and the TCP Persist Timer
+
+We have seen that TCP implements flow control by having the receiver specify
+the amount of data it is willing to accept from the sender: the receiver’s
+advertised window. When the receiver’s advertised window goes to zero, the
+sender is effectively stopped from transmitting data until the window becomes
+nonzero. When the receiver once again has space available, it provides a window
+update to the sender to indicate that data is permitted to flow once again.
+
+If an acknowledgment (containing a window update) is lost, we could end up with
+both sides waiting for the other. To prevent this form of deadlock from
+occurring, the sender uses a persist timer to query the receiver periodically,
+to find out if the window size has increased. The persist timer triggers the
+transmission of window probes. Window probes are segments that force the
+receiver to provide an ACK, which also necessarily contains a Win- dow Size
+field.
+
+#### Silly Window Syndrome (SWS)
+
+Window-based flow control schemes, especially those that do not use fixed-size
+segments (such as TCP), can fall victim to a condition known as the silly
+window syndrome (SWS). When it occurs, small data segments are exchanged across
+the connection instead of full-size segments [RFC0813]. This leads to
+undesirable inef- ficiency because each segment has relatively high overhead—
+a small number of data bytes relative to the number of bytes in the headers.
+
+> See the example in this chapter which explains how TCP avoids SWS in details.
+
+#### Large Buffers and Auto-Tuning
+
+In this chapter, we have seen that an application using a small receive buffer
+size may be doomed to significant throughput degradation compared to other
+applica- tions using TCP in similar conditions. Even if the receiver specifies
+a large enough buffer, the sender might specify too small a buffer, ultimately
+leading to bad performance. This problem became so important that many TCP
+stacks now decouple the allocation of the receive buffer from the size
+specified by the application.
+
+With auto-tuning, the amount of data that can be outstanding in the connection
+is continuously estimated, and the advertised window is arranged to always be
+at least this large (provided enough buffer space remains to do so). This has
+the advantage of allowing TCP to achieve its maximum available throughput rate
+(subject to the available network capacity) without having to allocate
+excessively large buffers at the sender or receiver ahead of time.
+
 
