@@ -1619,4 +1619,34 @@ the advantage of allowing TCP to achieve its maximum available throughput rate
 (subject to the available network capacity) without having to allocate
 excessively large buffers at the sender or receiver ahead of time.
 
+### Urgent Mechanism
+
+When the sender’s TCP receives such a write request, it enters a special state
+called urgent mode. Upon entering urgent mode, it records the last byte the
+application specified as urgent data. This is used to set the Urgent Pointer
+field in each subsequent TCP header the sender generates until the application
+ceases writing urgent data and all the sequence numbers up to the urgent
+pointer have been acknowledged by the receiver.
+
+A receiving TCP enters urgent mode when it receives a segment with the URG bit
+field set. The receiving application can discover whether its TCP has entered
+urgent mode using a standard socket API call (select()).
+
+The operation of the urgent mechanism has been a source of confusion because
+the Berkeley sockets API and documentation use the term *out-of-band* (OOB)
+data, although in reality TCP does not implement any true OOB capability.
+
+The “exit point” for urgent mode is defined to be the sum of the Sequence
+Number field and the Urgent Pointer field in a TCP segment. Only one urgent
+“point” (a sequence number offset) is maintained per TCP connection, so a
+packet arriving with a valid Urgent Pointer field causes the information
+contained in any previous urgent pointer to be lost.
+
+### Attacks Involving Window Management
+
+The window management procedures for TCP have been the subject of various
+attacks, primarily forms of resource exhaustion. In essence, advertising a
+small window slows a TCP transfer, tying up resources such as memory for a
+potentially long time.
+
 
