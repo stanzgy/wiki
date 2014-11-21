@@ -1668,3 +1668,62 @@ When packets are detected as lost, it is TCP’s responsibility to resend them.
 We are now concerned with what else TCP does when it observes a lost packet. In
 particular, we are interested in how it interprets this as a signal that
 congestion has occurred, and that it should slow down.
+
+#### Slowing Down a TCP Sender
+
+The new value used to hold the estimate of the network’s available capacity is
+called the *congestion window*, written more compactly as simply *cwnd*.
+
+    W = min(cwnd, awnd)
+
+The total amount of data a sender has introduced into the network for which it
+has not yet received an acknowledgment is sometimes called the *flight size*,
+which is always less than or equal to W.
+
+### The Classic Algorithms
+
+TCP learns the value for awnd with one packet exchange to the receiver, but
+without any explicit signaling, the only obvious way it has to learn a good
+value for cwnd is to try sending data at faster and faster rates until it
+experiences a packet drop (or other congestion indicator). This could be
+accomplished by either sending immediately at the maximum rate it can (subject
+to the value of awnd), or it could start more slowly.
+
+Because of the detrimental effects on the performance of other TCP connections
+sharing the same network path that could be experienced when starting at full
+rate, a TCP generally uses one algorithm to avoid starting so fast when it
+starts up to get to steady state. It uses a different one once it is in steady
+state.
+
+The arrival of an ACK, called the *ACK clock*, triggers the system to take the
+action of sending another packet.  This relationship is sometimes called
+*self-clocking*.
+
+#### Slow Start
+
+The slow start algorithm is executed when a new TCP connection is created or
+when a loss has been detected due to a retransmission timeout (RTO). It may
+also be invoked after a sending TCP has gone idle for some time. The purpose of
+slow start is to help TCP find a value for cwnd before probing for more
+available bandwidth using congestion avoidance and to establish the ACK clock.
+Typically, a TCP begins a new connection in slow start, eventually drops a
+packet, and then settles into steady-state operation using the congestion
+avoidance algorithm.
+
+A TCP begins in slow start by sending a certain number of segments (after the
+SYN exchange), called the *initial window* (IW). The value of IW was originally
+one SMSS, although with [RFC5681] it is allowed to be larger. The formula works
+as follows:
+
+    IW = 2*(SMSS) and not more than 2 segments (if SMSS > 2190 bytes)
+    IW = 3*(SMSS) and not more than 3 segments (if 2190 ≥ SMSS > 1095 bytes)
+    IW = 4*(SMSS) and not more than 4 segments (otherwise)
+
+Slow start operates by incrementing cwnd by min(N, SMSS) for each good ACK
+received, where N is the number of previously unacknowledged bytes ACKed by the
+received “good ACK.”
+
+The switch point at which TCP switches from operating in slow start to
+operating in congestion avoidance is determined by the relationship between
+cwnd and a value called the slow start threshold (or ssthresh).
+
