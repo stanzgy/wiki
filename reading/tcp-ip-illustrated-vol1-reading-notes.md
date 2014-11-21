@@ -1650,3 +1650,21 @@ small window slows a TCP transfer, tying up resources such as memory for a
 potentially long time.
 
 
+## TCP Congestion Control
+
+When a router is forced to discard data because it cannot handle the arriving
+traffic rate, is called congestion.
+
+### Detection of Congestion in TCP
+
+There is no explicit signaling about congestion. Instead, if a typical TCP is
+to react somehow to congestion, it must first conclude that congestion is
+occurring.
+
+In TCP, an assumption is made that a lost packet is an indicator of congestion,
+and that some response (i.e., slowing down in some way) is required.
+
+When packets are detected as lost, it is TCP’s responsibility to resend them.
+We are now concerned with what else TCP does when it observes a lost packet. In
+particular, we are interested in how it interprets this as a signal that
+congestion has occurred, and that it should slow down.
