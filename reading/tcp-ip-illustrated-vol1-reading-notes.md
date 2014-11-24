@@ -1727,3 +1727,58 @@ The switch point at which TCP switches from operating in slow start to
 operating in congestion avoidance is determined by the relationship between
 cwnd and a value called the slow start threshold (or ssthresh).
 
+#### Congestion Avoidance
+
+Once ssthresh is established and cwnd is at least at this level, a TCP runs the
+congestion avoidance algorithm, which seeks additional capacity by increasing
+cwnd by approximately one segment for each window’s worth of data that is moved
+from sender to receiver successfully.
+
+#### Selecting between Slow Start and Congestion Avoidance
+
+We mentioned ssthresh earlier. This threshold is a limit on the value of cwnd
+that determines which algorithm is in operation, slow start or congestion
+avoidance. When cwnd < ssthresh, slow start is used, and when cwnd > ssthresh,
+congestion avoidance is used.
+
+The initial value of ssthresh may be set arbitrarily high (e.g., to awnd or
+higher), which causes TCP to always start with slow start. When a
+retransmission occurs, caused by either a retransmission timeout or the
+execution of fast retransmit, ssthresh is updated as follows:
+
+    ssthresh = max(flight size/2, 2*SMSS)
+
+#### Tahoe, Reno, and Fast Recovery
+
+Fast recovery allows cwnd to (temporarily) grow by 1 SMSS for each ACK received
+while recovering. The congestion window is therefore inflated for a period of
+time, allowing an additional new packet to be sent for each ACK received,
+until a good ACK is seen.
+
+#### Standard TCP
+
+To summarize the combined algorithm from [RFC5681], TCP begins a con- nection
+in slow start (cwnd = IW) with a large value of ssthresh, generally at least
+the value of awnd. Upon receiving a good ACK (one that acknowledges new data),
+TCP updates the value of cwnd as follows:
+
+    cwnd += SMSS (if cwnd < ssthresh)           Slow start
+    cwnd += SMSS*SMSS/cwnd (if cwnd > ssthresh) Congestion avoidance
+
+When fast retransmit is invoked because of receipt of a third duplicate ACK (or
+other signal, if conventional fast retransmit initiation is not used), the
+following actions are performed:
+
+    1. ssthresh is updated to no more than the value given in equation above.
+    2. The fast retransmit algorithm is performed, and cwnd is set to
+       (ssthresh+3*SMSS).
+    3. cwnd is temporarily increased by SMSS for each duplicate ACK received.
+    4. When a good ACK is received, cwnd is reset back to ssthresh.
+
+The actions in steps 2 and 3 constitute fast recovery.
+
+Slow start is always used in two cases: when a new connection is started, and
+when a retransmission timeout occurs. It can also be invoked when a sender has
+been idle for a relatively long time or there is some other reason to suspect
+that cwnd may not accurately reflect the current network congestion state.
+
