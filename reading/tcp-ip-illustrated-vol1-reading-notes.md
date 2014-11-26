@@ -1782,3 +1782,96 @@ when a retransmission timeout occurs. It can also be invoked when a sender has
 been idle for a relatively long time or there is some other reason to suspect
 that cwnd may not accurately reflect the current network congestion state.
 
+### Evolution of the Standard Algorithms
+
+> refs:
+>
+>   [1] Simulation-based Comparisons of Tahoe, Reno and SACK TCP
+>       (http://www.eecs.berkeley.edu/~fox/summaries/networks/tcp_comp.html)
+
+#### NewReno
+
+NewReno is a popular variant of modern TCPs—it does not suffer from the
+problems of the original fast recovery and is significantly less complicated to
+implement than SACKs. With SACKs, however, a TCP can perform better than
+NewReno when multiple packets are lost in a window of data, but doing this
+requires careful attention to the congestion control procedures.
+
+#### TCP Congestion Control with SACK
+
+The following issue arises with SACK TCP: using only cwnd as a bound on the
+sender’s sliding window to indicate how many (and which) packets to send during
+recovery periods is not sufficient. Instead, the selection of which packets to
+send needs to be decoupled from the choice of when to send them. Said another
+way, SACK TCP underscores the need to separate the congestion management from
+the selection and mechanism of packet retransmission.
+
+One way to implement this decoupling is to have a TCP keep track of how much
+data it has injected into the network separately from the maintenance of the
+window. In [RFC3517] this is called the pipe variable, an estimate of the
+flight size.
+
+#### Forward Acknowledgment (FACK) and Rate Halving
+
+In an effort to avoid the initial pause after loss but not violate the
+convention of emerging from recovery with a congestion window set to half of
+its size on entry, forward acknowledgment (FACK) was described in [MM96]. It
+consists of two algorithms called “overdamping” and “rampdown.”
+
+The basic operation of *Rate-Halving with Bounding Parameters* (RHBP) allows the
+TCP sender to send one packet for every two duplicate ACKs it receives during
+one RTT.
+
+To keep an accurate estimate of the flight size, RHBP uses information from
+SACKs to determine the FACK: the highest sequence number known to have reached
+the receiver, plus 1.
+
+The following expression allows the RHBP sender to transmit, if satisfied:
+
+    (SND.NXT – fack + retran_data + len) < cwnd
+
+#### Limited Transmit
+
+With limited transmit, a TCP with unsent data is permitted to send a new packet
+for each pair of consecutive duplicate ACKs it receives. Doing this helps to
+keep at least a minimal number of packets in the network—enough so that fast
+retransmit can be triggered upon packet loss. 
+
+#### Congestion Window Validation (CWV)
+
+The CWV algorithm work as follows: Whenever a new packet is to be sent, the
+time since the last send event is measured to determine if it exceeds one RTO.
+If so,
+
+    * ssthresh is modified but not reduced—it is set to max(ssthresh,
+      (3/4)*cwnd).
+    * cwnd is reduced by half for each RTT of idle time but is always at least
+      1 SMSS.
+
+For application-limited periods that are not idle, the following similar
+behavior is used:
+
+    * The amount of window actually used is stored in W_used.
+    * ssthresh is modified but not reduced—it is set to max(ssthresh,
+      (3/4)*cwnd).
+    * cwnd is set to the average of cwnd and W_used.
+
+### Handling Spurious RTOs—the Eifel Response Algorithm
+
+The Eifel Response Algorithm is aimed at handling the retransmission timer and
+congestion control state after a retransmission timer has expired. Here we
+discuss only the congestion-related portions of the response algorithm. It is
+initi- ated after the first timeout-based retransmission is sent. Its purpose
+is to undo a change to ssthresh when a retransmission is deemed to be spurious.
+
+    pipe_prev = min(flight size, ssthresh)
+
+If the RTO is spurious, the following steps are executed when an ACK arrives
+after the retransmission:
+
+    1. If a received good ACK includes an ECN-Echo flag, stop (see Section
+       16.11).
+    2. cwnd = flight size + min(bytes_acked, IW) (assuming cwnd is measured in
+       bytes).
+    3. ssthresh = pipe_prev.
+
