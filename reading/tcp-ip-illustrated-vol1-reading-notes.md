@@ -1873,5 +1873,23 @@ after the retransmission:
        16.11).
     2. cwnd = flight size + min(bytes_acked, IW) (assuming cwnd is measured in
        bytes).
-    3. ssthresh = pipe_prev.
+
+### Sharing Congestion State
+
+In an effort to generalize this idea and extend it to protocols and
+applications other than TCP, [RFC3124] describes the Congestion Manager, which
+provides a local operating system service available to protocol implementations
+to learn information such as path loss rate, estimated congestion, RTT, and so
+forth to destination hosts.
+
+### TCP Friendliness
+
+To provide a guideline for protocol designers to avoid unfairly competing with
+TCP flows when operating cooperatively on the Internet, researchers have
+developed an equation-based rate control limit that provides a bound of the
+bandwidth used by a conventional TCP connection operating in a particular
+environment. This method is called TCP Friendly Rate Control (TFRC)
+[RFC5348][FHPW00]. It is designed to provide a sending rate limit based on a
+combination of connection parameters and with environmental factors such as RTT
+and packet drop rate.
 
