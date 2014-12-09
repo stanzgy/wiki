@@ -1893,3 +1893,86 @@ environment. This method is called TCP Friendly Rate Control (TFRC)
 combination of connection parameters and with environmental factors such as RTT
 and packet drop rate.
 
+### TCP in High-Speed Environments
+
+#### HighSpeed TCP (HSTCP) and Limited Slow Start
+
+With *limited slow start*, a new parameter called max_ssthresh is introduced.
+This value is not the maximum value of ssthresh but instead a threshold for
+cwnd that works as follows: If cwnd <= max_ssthresh, slow start proceeds as
+normal. If max_ssthresh < cwnd <= ssthresh, then cwnd is increased by at most
+(max_ssthresh/2) SMSS per RTT.
+
+    if (cwnd <= max_ssthresh) {
+        cwnd = cwnd + SMSS /*regular slow start*/
+    } else {
+        K = int(cwnd / (0.5 * max_ssthresh))
+        cwnd = cwnd + int((1/K)*SMSS) /*limited slow start*/
+    }
+
+#### Binary Increase Congestion Control (BIC and CUBIC)
+
+##### BIC-TCP
+
+The main goal of BIC TCP is to provide linear RTT fairness even though
+congestion windows may be quite large (which is required to use high-bandwidth
+links). Linear RTT fairness means that connections receive a bandwidth share
+inversely proportional to their RTTs, rather than some more complicated or
+unknown function.
+
+The approach modifies a standard TCP sender with two algorithms: binary search
+increase and additive increase. These algorithms are invoked after a congestion
+indication (e.g., packet loss), but only one of the algorithms is in operation
+at any given point in time.
+
+The binary search increase algorithm operates as follows: The current minimum
+window is the last point at which the connection experienced no packet loss
+during an entire RTT. The maximum window is the window size at which the
+connection last experienced loss, if known. The desired window lies somewhere
+between the two. Using a binary search technique, BIC-TCP selects a trial
+window in the midpoint of these two values and tries again recursively. If this
+point shows continued packet loss, it becomes the new maximum and the process
+repeats. If not, it becomes the new minimum and the process repeats.
+
+##### CUBIC
+
+It addresses concerns raised that BIC-TCP may be too aggressive under some
+circumstances. It also simplifies the window growth procedures. Instead of
+using a threshold (Smax) to decide when to invoke the binary search increase
+versus additive increase, an odd-degree polynomial function, in particular a
+cubic function, is used instead to control the window increase function. Cubic
+functions can have both convex and concave portions, meaning that they can grow
+more slowly in some portions (concave) and more quickly in others (convex).
+
+### Delay-Based Congestion Control
+
+#### Vegas
+
+Vegas operates by estimating the amount of data it expects to transfer in a
+certain amount of time and comparing this with the amount of data it is
+actually able to transfer. If the requisite amount of data is not transferred,
+it is likely to be held up in a router queue along the path. If this condition
+persists, the Vegas sender slows down. This is in contrast to the standard TCP
+approach, which forces a packet drop to occur in order to determine the point
+at which the network is congested.
+
+While in its congestion avoidance phase, during each RTT, Vegas measures the
+amount of data transferred and divides this number by the minimum delay
+observed across the connection. It maintains two thresholds, α and β (where α <
+β). When the difference in expected throughput (window size divided by the
+smallest RTT observed) versus achieved throughput is less than α, the
+congestion window is increased; when it is greater than β, the congestion
+window is decreased. Otherwise, it is left as is. All changes to the congestion
+window are linear, meaning the scheme is an *additive increase/additive
+decrease* (AIAD) congestion control scheme.
+
+### Buffer Bloat
+
+Perhaps ironically, this large amount of memory (as compared to traditional
+networking devices) can actually lead to degraded performance for protocols
+such as TCP. This problem has been termed *buffer bloat*.
+
+The standard TCP congestion control algorithms, which tend to keep buffers full
+at bottleneck links, do not operate well when a large amount of buffering
+occurs between the sender and receiver because the congestion indicator (a
+packet drop) takes a long time to be delivered to a sender.
