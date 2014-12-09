@@ -1976,3 +1976,57 @@ The standard TCP congestion control algorithms, which tend to keep buffers full
 at bottleneck links, do not operate well when a large amount of buffering
 occurs between the sender and receiver because the congestion indicator (a
 packet drop) takes a long time to be delivered to a sender.
+
+### Active Queue Management and ECN
+
+Routers that apply scheduling and buffer management policies other than
+FIFO/drop tail are usually said to be active, and the corresponding methods
+they use to manage their queues are called *active queue management* (AQM)
+mechanisms.
+
+Although AQM can be useful independently, it becomes more useful when routers
+and switches implementing AQM have a common method for conveying their status
+to the end systems. For TCP, this is described in [RFC3168] and extended with
+additional security in an experimental specification [RFC3540]. These RFCs
+describe *Explicit Congestion Notification* (ECN), which is a way for routers
+to mark packets (by ensuring both of the ECN bits in the IP header are set) to
+indicate the onset of congestion.
+
+Because the receiver normally returns information to the sender by using
+(unreliable) ACK packets, there is a significant chance that the congestion
+indicator could be lost. For this reason, TCP implements a small
+reliability-enhancing protocol for carrying the indication back to the sender.
+Upon receiving an incoming packet with CE set, the TCP receiver sets the
+ECN-Echo bit field in each ACK packet it sends until receiving a CWR bit field
+set to 1 from the TCP sender in a subsequent data packet. The CWR bit field
+being set indicates that the congestion window (i.e., sending rate) has been
+reduced.
+
+### Attacks Involving TCP Congestion Control
+
+Perhaps the earliest attack involves the fabrication of ICMPv4 Source Quench
+messages. When these are delivered to a host running TCP, any connection to the
+IP address contained in the offending datagram inside the ICMP message slows
+down.
+
+A more sophisticated and more recent set of attacks have been considered by
+looking at *misbehaving receivers*. The attacks are named *ACK division*,
+*DupACK spoofing*, and *Optimistic ACKing* and are implemented in a TCP variant
+the authors (jokingly) call “TCP Daytona.”
+
+ACK division operates by producing more than one ACK for the range of bytes
+being acknowledged. Because the TCP congestion control typically operates based
+on the arrival of ACK packets (rather than the ACK field contained in the ACK
+itself), a sending TCP can be induced to increase cwnd faster than it would
+otherwise.
+
+DupACK spoofing causes a sender to increase its congestion window during fast
+recovery. Recall from the previous discussion that during standard fast
+recovery, cwnd is incremented for each duplicate ACK received. The attack
+involves creating extra duplicate ACKs that cause this to happen more quickly
+than intended.
+
+Optimistic ACKing involves producing ACKs for segments that have not yet
+arrived. Because TCP’s congestion control computations are based on end-to-end
+RTTs, ACKing data that has not yet arrived causes the sender to react faster
+than it would because it is fooled into believing the actual RTT is smaller.
