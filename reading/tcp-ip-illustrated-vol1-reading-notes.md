@@ -2030,3 +2030,59 @@ Optimistic ACKing involves producing ACKs for segments that have not yet
 arrived. Because TCP’s congestion control computations are based on end-to-end
 RTTs, ACKing data that has not yet arrived causes the sender to react faster
 than it would because it is fooled into believing the actual RTT is smaller.
+
+
+## TCP Keepalive
+
+### Introduction
+
+Under some circumstances, it is useful for a client or server to become aware
+of the termination or loss of connection with its peer. In other circumstances,
+it is desirable to keep a minimal amount of data flowing over a connection,
+even if the applications do not have any to exchange. TCP *keepalive* provides
+a capability useful for both cases. Keepalive is a method for TCP to probe its
+peer without affecting the content of the data stream. It is driven by a
+*keepalive timer*. When the timer fires, a keepalive *probe* (keepalive for
+short) is sent, and the peer receiving the probe responds with an ACK.
+
+> Keepalives are not part of the TCP specification.
+
+### Description
+
+Either end of a TCP connection may request keepalives, which are turned off by
+default, for their respective direction of the connection. A keepalive can be
+set for one side, both sides, or neither side.
+
+If there is no activity on the connection for some period of time (called the
+*keepalive time*), the side(s) with keepalive enabled sends a keepalive probe to
+its peer(s). If no response is received, the probe is repeated periodically
+with a period set by the *keepalive interval* until a number of probes equal to
+the number *keepalive probes* is reached. If this happens, the peer’s system is
+determined to be unreachable and the connection is terminated.
+
+A keepalive probe is an empty (or 1-byte) segment with sequence number equal to
+one less than the largest ACK number seen from the peer so far.
+
+Anytime it is operating, a TCP using keepalives may find its peer in one of
+four states:
+
+* The peer host is still up and running and reachable.
+* The peer’s host has crashed and is either down or in the process of
+  rebooting.
+* The client’s host has crashed and rebooted.
+* The peer’s host is up and running but is unreachable from the requestor for
+  some reason.
+
+### Attacks Involving TCP Keepalives
+
+TCP keepalives contain no user-level data, so the use of encryption is limited
+at best. The consequence is that TCP keepalives may be spoofed. When TCP
+keepalives are spoofed, the victim can be coerced into keeping resources
+allocated for a period longer than intended.
+
+A passive observer could notice the existence of keepalives and their
+interarrival times to conceivably learn information about the configuration
+parameters (possibly identifying the type of sending system, called
+*fingerprinting*) or about the network topology (i.e., whether downstream
+routers are forwarding traffic or not).
+
