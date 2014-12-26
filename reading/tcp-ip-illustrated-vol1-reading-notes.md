@@ -2086,3 +2086,292 @@ parameters (possibly identifying the type of sending system, called
 *fingerprinting*) or about the network topology (i.e., whether downstream
 routers are forwarding traffic or not).
 
+## Security: EAP, IPsec, TLS, DNSSEC, and DKIM
+
+### Basic Principles of Information Security
+
+* *Confidentiality* means that information is made known only to its intended
+  users (which could include processing systems).
+* *Integrity* means that information has not been modified in an unauthorized
+  way before it is delivered.
+* *Availability* means that information is available when needed.
+
+### Threats to Network Communication
+
+Attacks can generally be categorized as either passive or active.
+
+Passive attacks are mounted by monitoring or eaves- dropping on the contents of
+network traffic, and if not handled they can lead to unauthorized release of
+information (loss of confidentiality).
+
+Active attacks can cause modification of information (with possible loss of
+integrity) or denial of service (loss of availability).
+
+### Basic Cryptography and Security Mechanisms
+
+#### Cryptosystems
+
+Two most important types of cryptographic algorithms: *symmetric key* and
+*public (asymmetric) key* ciphers.
+
+A *cleartext* message is processed by an encryption algorithm to produce
+ciphertext (scrambled text). The key is a particular sequence of bits used to
+drive the *encryption algorithm* or cipher. With different keys, the same input
+produces different outputs. Combining the algorithms with supporting protocols
+and operating methods forms a *cryptosystem*.
+
+One of the major benefits of asymmetric key cryptosystems is that secret key
+material does not have to be securely distributed to every party that wishes to
+communicate.
+
+A symmetric encryption algorithm is usually classified as either a *block
+cipher* or a *stream cipher*.
+
+Block ciphers perform operations on a fixed number of bits (e.g., 64 or 128) at
+a time, and stream ciphers operate continuously on however many bits (or bytes)
+are provided as input.
+
+In a *hybrid* cryptosystem, elements of both public key and symmetric key
+cryptography are used. Most often, public key operations are used to exchange a
+randomly generated confidential (symmetric) session key, which is used to
+encrypt traffic for a single transaction using a symmetric algorithm. The
+reason for doing so is performance—symmetric key operations are less
+computationally intensive than public key operations.
+
+#### Rivest, Shamir, and Adleman (RSA) Public Key Cryptography
+
+We have seen how public key cryptography can be used for both digital
+signatures and confidentiality. The most common approach is called RSA in
+deference to its authors’ names, Rivest, Shamir, and Adleman. The security of
+this system hinges on the difficulty of factoring large numbers into
+constituent primes.
+
+Key generation:
+
+1. Choose two distinct prime numbers p and q
+2. Compute n = pq
+3. Compute φ(n) = φ(p)φ(q) = (p − 1)(q − 1)
+4. Choose an integer e such that 1 < e < φ(n) and gcd(e, φ(n)) = 1
+5. Determine d as de ≡ 1 (mod φ(n))
+
+The public key is (n, e), the private key is (n, d).
+
+Encryption:
+
+1. Turn message M into integer m, 0 ≤ m < n
+2. Compute the ciphertext c ≡ m^e (mod n)
+
+Decryption:
+
+1. Recover message m with m ≡ c^d (mod n)
+
+Proofs of correctness:
+
+Use *Fermat's little theorem*.
+
+> http://en.wikipedia.org/wiki/RSA_(cryptosystem)#Proofs_of_correctness
+
+Security:
+
+The security of RSA is based on the difficulty of factoring large numbers.
+
+#### Diffie-Hellman-Merkle Key Agreement (aka Diffie-Hellman or DH)
+
+Doing so in a network that may contain eavesdroppers (such as Eve) is a
+challenge, because it is not immediately obvious how to have two principals
+(such as Alice and Bob) agree on a common secret number without Eve knowing.
+The *Diffie-Hellman-Merkle Key Agreement protocol* (more commonly called simply
+Diffie-Hellman or DH) provides a method for accomplishing this task, based on
+the use of finite field arithmetic.
+
+Key generalization:
+
+1. Alice and Bob agree on a finite cyclic group G and a generating element g in
+   G. (This is usually done long before the rest of the protocol; g is assumed
+   to be known by all attackers.) We will write the group G multiplicatively.
+2. Alice picks a random natural number a and sends *g^a mod p* to Bob.
+3. Bob picks a random natural number b and sends *g^b mod p* to Alice.
+4. Alice computes *(g^b)^a mod p*.
+5. Bob computes *(g^a)^b mod p*.
+
+Both Alice and Bob are now in possession of the group element *g^ab mod p*,
+which can serve as the shared secret key.
+
+Security:
+
+Let p be a (large) prime number and g < p be a primitive root mod p. With these
+assumptions, every integer in the group Z\_p = {1, ..., p - 1} can be generated
+by raising g to some power. Said another way, for every n, there exists some k
+for which g^k ≡ n (mod p). Finding the value (or values) of k given g, n, and p
+(called the *discrete logarithm problem*) is considered to be difficult,
+resulting in the belief that DH is secure.
+
+However, this basic protocol is vulnerable to an attack from Mallory. Mallory
+can pretend to be Bob when communicating with Alice and vice versa by supplying
+her own A and B values. However, the basic DH protocol can be extended to
+protect from this man-in-the-middle attack if the public values for A and B
+are authenticated.
+
+#### Signcryption and Elliptic Curve Cryptography (ECC)
+
+Reducing the effort of combining digital signatures and encryption for
+confidentiality, a class of signcryption schemes (also called authenticated
+encryption) provides both features at a cost less than the sum of the two if
+computed separately.
+
+An alternative based on the difficulty of finding the discrete logarithm of an
+elliptic curve element has emerged, known as elliptic curve cryptography (ECC,
+not to be confused with error-correcting code).
+
+#### Key Derivation and Perfect Forward Secrecy (PFS)
+
+The session key is ordinarily a random number (see the following section)
+generated by a function called a *key derivation function (KDF)*, based on some
+input such as a master key or a previous session key. A scheme in which the
+compromise of one session key keeps future communications secure is said to
+have *perfect forward secrecy (PFS)*.
+
+#### Pseudorandom Numbers, Generators, and Function Families
+
+Given that computers are not very random by nature, obtaining true random
+numbers is somewhat difficult. The numbers used in most computers for
+simulating randomness are called pseudorandom numbers.
+
+Pseudorandom numbers are produced by an algorithm or device known as a
+*pseudorandom number generator (PRNG)* or *pseudorandom generator (PRG)*,
+depending on the author.
+
+A *pseudorandom function family (PRF)* is a family of functions that appear to
+be algorithmically indistinguishable (by polynomial time algorithms) from truly
+random functions [GGM86]. A PRF is a stronger concept than a PRG, as a PRG can
+be created from a PRF. PRFs are the basis for *cryptographically strong* (or
+secure) pseudorandom number generators, called CSPRNGs.
+
+#### Nonces and Salt
+
+A *cryptographic nonce* is a number that is used once (or for one transaction)
+in a cryptographic protocol. Most commonly, a nonce is a random or pseudorandom
+number that is used in authentication protocols to ensure freshness. Freshness
+is the (desirable) property that a message or operation has taken place in the
+very recent past.
+
+A *salt or salt value*, used in the cryptographic context, is a random or
+pseudorandom number used to frustrate brute-force attacks on secrets.
+Brute-force attacks usually involve repeatedly guessing a password, passphrase,
+key, or equivalent secret value and checking to see if the guess was correct.
+Salts work by frustrating the checking portion of a brute-force attack.
+
+At the time, the encryption method (DES) was well known and there was concern
+that a hardware-based dictionary attack would be possible whereby many words
+from a dictionary were encrypted with DES ahead of time (forming a *rainbow
+table*) and compared against the password file.
+
+#### Cryptographic Hash Functions and Message Digests
+
+A checksum or FCS can be used to verify message integrity against an adversary
+like Mallory if properly constructed using special functions. Such functions
+are called *cryptographic hash functions* and often resemble portions of
+encryption algorithms. The output of a cryptographic hash function H, when
+provided a message M, is called the *digest* or *fingerprint* of the message,
+H(M).
+
+A message digest is a type of strong FCS that is easy to compute and has the
+following important properties:
+
+* *Preimage resistance*: Given H(M), it should be difficult to determine M if not
+  already known.
+* *Second preimage resistance*: Given H(M1), it should be difficult to
+  determine an M2 ≠ M1 such that H(M1) = H(M2).
+* *Collision resistance*: It should be difficult to find any pair M1, M2 where
+  H(M1) = H(M2) when M2 ≠ M1.
+
+The two most common cryptographic hash algorithms are at present the *Message
+Digest Algorithm 5* (MD5, [RFC1321]), which produces a 128-bit (16-byte)
+digest, and the *Secure Hash Algorithm 1* (SHA-1), which produces a 160-bit
+(20-byte) digest.
+
+#### Message Authentication Codes (MACs, HMAC, CMAC, and GMAC)
+
+A message authentication code (unfortunately abbreviated MAC or sometimes MIC
+but unrelated to the link-layer MAC addresses we discussed in Chapter 3) can be
+used to ensure message integrity and authentication.
+
+MACs require resistance to various forms of forgery. For a given keyed hash
+function H(M,K) taking input message M and key K, resistance to *selective
+forgery* means that it is difficult for an adversary not knowing K to form
+H(M,K) given a specific M. H(M,K) is resistant to *existential forgery* if it
+is difficult for an adversary lacking K to find any previously unknown valid
+combination of M and H(M,K).
+
+A standard MAC that uses cryptographic hash functions in a particular way is
+called the *keyed-hash message authentication code (HMAC)*.
+
+    HMAC-H (K, M)^t = Λ_t (H((K ⊕ opad)||H((K ⊕ ipad)||M)))
+
+In this definition, opad (outer pad) is an array containing the value 0x5C
+repeated |K| times, and ipad (inner pad) is an array containing the value 0x36
+repeated |K| times. ⊕ is the vector XOR operator, and || is the concatenation
+oper- ator. Normally the HMAC output is intended to be a certain number t of
+bytes in length, so the operator Λ\_t(M) takes the left-most t bytes of M.
+
+#### Cryptographic Suites and Cipher Suites
+
+The combination of techniques used in a particular system, especially those we
+see used with Internet protocols, are called a *cryptographic suite* or
+sometimes a *cipher suite*, although the first term is more accurate.
+
+### Certificates, Certificate Authorities (CAs), and PKIs
+
+One of the challenges with public key cryptosystems is to determine the cor-
+rect public key for a principal or identity.
+
+One model, called a *web of trust*, involves having a certificate (identity/key
+binding) endorsed by a collection of existing users (called endorsers). An
+endorser signs a certificate and distributes the signed certificate. The more
+endorsers for a certificate over time, the more reliable it is likely to be. An
+entity checking a certificate might require some number of endorsers or
+possibly some particular endorsers to trust the certificate. The web of trust
+model is decentralized and “grassroots” in nature, with no central authority.
+
+The web of trust model was first described as part of the *Pretty Good Privacy
+(PGP)* encryption system for electronic mail, which has evolved to support a
+standard encoding format called OpenPGP, defined by [RFC4880].
+
+A more formal approach, which has the added benefit of being provably secure
+under certain theoretical assumptions in exchange for more dependence on a
+centralized authority, involves the use of a *public key infrastructure (PKI)*.
+A PKI is a service responsible for creating, revoking, distributing, and
+updating key pairs and certificates. It operates with a collection of
+*certificate authorities (CAs)*.
+
+#### Public Key Certificates, Certificate Authorities, and X.509
+
+While several types of certificates have been used in the past, the one of most
+interest to us is based on an Internet profile of the ITU-T X.509 standard
+[RFC5280]. In addition, any particular certificate may be stored and exchanged
+in a number of file or encoding formats. The most common ones include DER, PEM
+(a Base64 encoded version of DER), PKCS#7 (P7B), and PKCS#12 (PFX).
+
+#### Validating and Revoking Certificates
+
+To validate a certificate, a validation or certification path must be
+established that includes a set of validated certificates, usually up to some
+trust anchor (e.g., root certificate) that is already known to the relying
+party.
+
+There are several reasons why a certificate may need to be revoked, such as
+when a certificate’s subject (or issuer) changes affiliations or name. When a
+certifi- cate is revoked, it may no longer be used. The challenge is to ensure
+that entities that wish to use a certificate become aware if it has been
+revoked.  In the Internet, there are two primary ways this is accomplished:
+*CRLs* and the *Online Certificate Status Protocol (OCSP)* [RFC2560].
+
+### TCP/IP Security Protocols and Layering
+
+ Layer Number | Layer Name  |                       Examples
+--------------|-------------|---------------------------------------------------------
+      7       | Application | DNSSEC, DKIM, Diameter, RADIUS, SSH, Kerobse, IPsec(IKE)
+      4       |  Transport  |                    TLS, DTLS, PANA
+      3       |   Network   |                      IPsec (ESP)
+      2       |    Link     |    802.1X(EAPoL), 802.1AE(MACSec), 802.11i/WPA2, EAP
+
