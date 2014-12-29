@@ -2322,8 +2322,8 @@ sometimes a *cipher suite*, although the first term is more accurate.
 
 ### Certificates, Certificate Authorities (CAs), and PKIs
 
-One of the challenges with public key cryptosystems is to determine the cor-
-rect public key for a principal or identity.
+One of the challenges with public key cryptosystems is to determine the correct
+public key for a principal or identity.
 
 One model, called a *web of trust*, involves having a certificate (identity/key
 binding) endorsed by a collection of existing users (called endorsers). An
@@ -2361,7 +2361,7 @@ party.
 
 There are several reasons why a certificate may need to be revoked, such as
 when a certificate’s subject (or issuer) changes affiliations or name. When a
-certifi- cate is revoked, it may no longer be used. The challenge is to ensure
+certificate is revoked, it may no longer be used. The challenge is to ensure
 that entities that wish to use a certificate become aware if it has been
 revoked.  In the Internet, there are two primary ways this is accomplished:
 *CRLs* and the *Online Certificate Status Protocol (OCSP)* [RFC2560].
@@ -2375,3 +2375,168 @@ revoked.  In the Internet, there are two primary ways this is accomplished:
       3       |   Network   |                      IPsec (ESP)
       2       |    Link     |    802.1X(EAPoL), 802.1AE(MACSec), 802.11i/WPA2, EAP
 
+### Network Access Control: 802.1X, 802.1AE, EAP, and PANA
+
+*Network Access Control (NAC)* refers to methods used to authorize or deny
+network communications to particular systems or users. Defined by the IEEE, the
+*802.1X Port-Based Network Access Control (PNAC)* standard is commonly used
+with TCP/ IP networks to support LAN security in enterprises, for both wired
+and wireless networks.
+
+Used in conjunction with the IETF standard *Extensible Authentication Protocol
+(EAP)* [RFC3748], 802.1X is sometimes called *EAP over LAN (EAPoL)*, although
+the 802.1X standard covers more than just the EAPoL packet format.
+
+EAP can be used with multiple link-layer technologies and supports multiple
+methods for implementing *authentication, authorization, and accounting (AAA)*.
+EAP does not perform encryption itself, so it must be used in conjunction with
+some other cryptographically strong protocol to be secure.
+
+### Layer 3 IP Security (IPsec)
+
+IPsec is an architecture and collection of standards that provide data source
+authentication, integrity, confidentiality, and access control at the network
+layer for IPv4 and IPv6 [RFC4301], including Mobile IPv6 [RFC4877]. It also
+provides a way to exchange cryptographic keys between two communicating
+parties, a recommended set of cryptographic suites, and a method for signaling
+the use of compression.
+
+The operation of IPsec can be divided into the establishment phase, where key
+material is exchanged and a *security association (SA)* is built, followed by
+the data exchange phase, where different types of encapsulation schemes, called
+the *Authentication Header (AH)* and *Encapsulating Security Payload (ESP)*,
+may be used in different modes such as tunnel mode or transport mode to protect
+the flow of IP datagrams.
+
+#### Internet Key Exchange (IKEv2) Protocol
+
+An SA is a simplex (one-direction) authenticated association established
+between two communicating parties, or between a sender and multiple receivers
+if IPsec is supporting multicast. Most frequently, communication is
+bidirectional between two parties, so a pair of SAs is required to use IPsec
+effectively. A special protocol called the *Internet Key Exchange*.
+
+#### Authentication Header (AH)
+
+Defined in [RFC4302], the IP *Authentication Header (AH)*, one of the three
+major components of IPsec, is an optional portion of the IPsec protocol suite
+that provides a method for achieving origin authentication and integrity (but
+not confidentiality) of IP datagrams.
+
+#### Encapsulating Security Payload (ESP)
+
+The ESP protocol of IPsec, defined in [RFC4303] (where it is called ESP (v3)
+even though ESP provides no formal version numbers), provides a selectable
+combina- tion of confidentiality, integrity, origin authentication, and
+anti-replay protection for IP datagrams.
+
+Given its flexibility and feature set, ESP is (far) more popular than AH.
+
+#### L2TP/IPsec
+
+The Layer 2 Tunneling Protocol (L2TP) supports tunneling of layer 2 traffic
+such as PPP through IP and non-IP networks. It relies on authentication methods
+that provide some authentication during connection initiation, but no
+subsequent per-packet authentication, integrity protection, or confidentiality.
+To address this concern, L2TP can be combined with IPsec [RFC3193]. The
+combination, called L2TP/IPsec, provides a recommended method to establish
+remote layer 2 VPN access to enterprise (or home) networks.
+
+L2TP can be secured with IPsec using either a direct L2TP-over-IP encapsulation
+(protocol number 115) or a UDP/IP encapsulation that eases NAT traversal.
+
+#### IPsec NAT Traversal
+
+Using NATs with IPsec can present something of a challenge, primarily because
+IP addresses have traditionally been used in identifying communication
+endpoints and are assumed to not change.
+
+The primary approach to dealing with most of the NAT traversal concerns is to
+encapsulate IPsec ESP and IKE traffic using UDP/IP, which can be modified by
+conventional NATs when necessary. (There is no supported solution for NAT
+traversal of AH.)
+
+### Transport Layer Security (TLS and DTLS)
+
+The most widely used protocol for security operates just above the transport
+layer and is called Transport Layer Security (TLS).
+
+#### TLS 1.2
+
+Confidentiality and data integrity are provided based on a variety of
+cryptographic suites that use certificates that can be provided by a PKI. TLS
+can also establish secure connections between two anonymous parties (without
+using certificates), but this application is vulnerable to a MITM attack (not
+surprising, given that each end is not even strongly identified).
+
+The TLS protocol has two layers of its own, called the *record layer* and the
+*upper layer*.
+
+#### TLS with Datagrams (DTLS)
+
+The TLS protocol assumes a stream-based underlying transport protocol for
+delivering its messages. A *datagram version (DTLS)* relaxes this assumption
+but aims to otherwise achieve the same security goals as TLS using essentially
+all the same message formats.
+
+### DNS Security (DNSSEC)
+
+Security for DNS covers both data within the DNS (resource records or RRs) as
+well as security of transactions that synchronize or update contents of DNS
+servers.
+
+The mechanisms are called the *Domain Name System Security Extensions (DNSSEC)*
+and are discussed in a family of RFCs [RFC4033][RFC4034] [RFC4035].
+
+DNSSEC accommodates resolvers with varying levels of security “awareness.” A
+*validating security-aware resolver* (also called *validating resolver*) checks
+cryptographic signatures to ensure that the DNS data it handles is secure.
+
+When operating, they are able to ascertain whether DNS information is *secure*
+(valid with all signatures checked), *insecure* (valid signatures indicate that
+something should not be present but is), *bogus* (proper data appears to be
+present but cannot be validated for some reason), or *indeterminate* (veracity
+cannot be determined, usually because of lack of signatures). The indeterminate
+case is the default case when no other information is available.
+
+DNSSEC works securely only when a zone is signed by a domain administrator,
+there is some basis for trust, and both server and resolver software
+participate.
+
+#### DNSSEC Resource Records
+
+As specified in [RFC4034], DNSSEC uses four new resource records (RRs) and two
+message header bits (CD and AD).
+
+* DNS Security (DNSKEY) Resource Records: DNSSEC uses the DNSKEY resource
+  record to hold public keys.
+* Delegation Signer (DS) Resource Records: A delegation signer (DS) resource
+  record is used to refer to a DNSKEY RR, usually from a parent zone to a
+  descendant zone.
+* NextSECure (NSEC and NSEC3) Resource Records: The NextSECure (NSEC) RR is
+  used to hold the “next” RRset owner’s domain name in the canonical ordering
+  of names or a delegation point NS type RRset.
+* Resource Record Signature (RRSIG) Resource Records: DNSSEC signs and
+  validates signatures on RRsets using the Resource Record Signature (RRSIG)
+  RR, and every authoritative RR in a zone must be signed (glue records and
+  delegation NS records present in parent zones aren’t).
+
+> There is a detailed example of DNSSEC usage in chapter 18.10.2.2
+
+#### Transaction Authentication (TSIG, TKEY, and SIG(0))
+
+With transaction authentication, the exchange between a particular resolver
+and server (or between servers) is protected. Note, however, that transactional
+security does not directly protect the contents of the DNS, as does DNSSEC. As
+a result, DNSSEC and transaction authentication are complementary and can be
+deployed together.
+
+There are two primary methods for authenticating DNS transactions: TSIG and
+SIG(0). TSIG uses shared keys and SIG(0) uses public/private key pairs.
+
+### DomainKeys Identified Mail (DKIM)
+
+*DomainKeys Identified Mail (DKIM)* [RFC5585] is intended to provide an
+association between an entity and a domain name that can be used to help
+determine the party responsible for originating a message, especially in the
+e-mail context.
