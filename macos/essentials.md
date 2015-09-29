@@ -28,7 +28,13 @@ Homepage: https://www.alfredapp.com/
 
 System monitor
 
-https://bjango.com/mac/istatmenus/
+Homepage: https://bjango.com/mac/istatmenus/
+
+## Little Snitch
+
+Network firewall
+
+Homepage: https://www.obdev.at/products/littlesnitch/index.html
 
 ## Bartender
 
@@ -101,3 +107,33 @@ Homepage: http://displaymenu.milchimgemuesefach.de/
 Text Editor
 
 Homepage: http://www.sublimetext.com/
+
+## Clean My Mac
+
+System cleanup
+
+Homepage: http://macpaw.com/cleanmymac
+
+## f.lux
+
+Screen color auto adjustment
+
+Homepage: https://justgetflux.com/
+
+## Noizio
+
+White noise generator
+
+Homepage: http://noiz.io/
+
+## CheatSheet
+
+Show active shortcuts of current application
+
+Homepage: http://www.mediaatelier.com/CheatSheet/
+
+## DynamicLyrics
+
+Display iTunes lyrics in the top Menu Bar
+
+Homepage: https://martianz.cn/dynamiclyrics/
