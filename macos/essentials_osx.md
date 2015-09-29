@@ -98,7 +98,7 @@ Homepage: http://ftnew.com/catchmouse.html
 
 ## Display Menu
 
-Display manager
+Display management
 
 Homepage: http://displaymenu.milchimgemuesefach.de/
 
@@ -113,6 +113,12 @@ Homepage: http://www.sublimetext.com/
 System cleanup
 
 Homepage: http://macpaw.com/cleanmymac
+
+## Sequel Pro
+
+MySQL database management
+
+Homepage: http://www.sequelpro.com
 
 ## f.lux
 
