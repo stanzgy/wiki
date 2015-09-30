@@ -4,25 +4,25 @@
 
 Terminal replacement.
 
-Homepage: https://iterm2.com/
+Homepage: https://iterm2.com
 
 ## Homebrew
 
 The missing package manager for OS X
 
-Homepage: http://brew.sh/
+Homepage: http://brew.sh
 
 ## Homebrew caskroom
 
 Homebrew extention
 
-Homepage: http://caskroom.io/
+Homepage: http://caskroom.io
 
 ## Alfred Powerpack
 
 Launcher
 
-Homepage: https://www.alfredapp.com/
+Homepage: https://www.alfredapp.com
 
 ## Firefox
 
@@ -36,11 +36,23 @@ Internet browser
 
 Homepage: http://www.google.com/chrome
 
+## Thunderbird
+
+Mail client
+
+Homepage: https://www.mozilla.org/en-US/thunderbird
+
+## Tunnelblick
+
+Openvpn OS X client
+
+Homepage: https://tunnelblick.net
+
 ## iStat Menus
 
 System monitor
 
-Homepage: https://bjango.com/mac/istatmenus/
+Homepage: https://bjango.com/mac/istatmenus
 
 ## Little Snitch
 
@@ -52,7 +64,7 @@ Homepage: https://www.obdev.at/products/littlesnitch/index.html
 
 Menubar organizer
 
-Homepage: http://www.macbartender.com/
+Homepage: http://www.macbartender.com
 
 # Spectacle
 
@@ -76,7 +88,7 @@ Homepage: https://pqrs.org/osx/karabiner/seil.html.en
 
 Finder enhancement
 
-Homepage: https://www.trankynam.com/xtrafinder/
+Homepage: https://www.trankynam.com/xtrafinder
 
 ## Unarchiver
 
@@ -100,7 +112,7 @@ Homepage: https://github.com/integralpro/nosleep
 
 A clock screen saver
 
-Homepage: http://padbury.me/clock/
+Homepage: http://padbury.me/clock
 
 ## CatchMouse
 
@@ -112,13 +124,13 @@ Homepage: http://ftnew.com/catchmouse.html
 
 Display management
 
-Homepage: http://displaymenu.milchimgemuesefach.de/
+Homepage: http://displaymenu.milchimgemuesefach.de
 
 ## Sublime Text
 
 Text Editor
 
-Homepage: http://www.sublimetext.com/
+Homepage: http://www.sublimetext.com
 
 ## Clean My Mac
 
@@ -136,22 +148,22 @@ Homepage: http://www.sequelpro.com
 
 Screen color auto adjustment
 
-Homepage: https://justgetflux.com/
+Homepage: https://justgetflux.com
 
 ## Noizio
 
 White noise generator
 
-Homepage: http://noiz.io/
+Homepage: http://noiz.io
 
 ## CheatSheet
 
 Show active shortcuts of current application
 
-Homepage: http://www.mediaatelier.com/CheatSheet/
+Homepage: http://www.mediaatelier.com/CheatSheet
 
 ## DynamicLyrics
 
 Display iTunes lyrics in the top Menu Bar
 
-Homepage: https://martianz.cn/dynamiclyrics/
+Homepage: https://martianz.cn/dynamiclyrics
