@@ -42,6 +42,12 @@ Mail client
 
 Homepage: https://www.mozilla.org/en-US/thunderbird
 
+## Office 365
+
+Microsoft Office suite
+
+Homepage: https://www.office.com
+
 ## Tunnelblick
 
 Openvpn OS X client
