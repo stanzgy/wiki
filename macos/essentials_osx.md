@@ -24,6 +24,18 @@ Launcher
 
 Homepage: https://www.alfredapp.com/
 
+## Firefox
+
+Internet browser
+
+Homepage: https://www.mozilla.org/en-US/firefox/new
+
+## Chrome
+
+Internet browser
+
+Homepage: http://www.google.com/chrome
+
 ## iStat Menus
 
 System monitor
