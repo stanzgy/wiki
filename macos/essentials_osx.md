@@ -138,6 +138,12 @@ Text Editor
 
 Homepage: http://www.sublimetext.com
 
+## AppCleaner
+
+Uninstall Apps
+
+Homepage: http://www.freemacsoft.net/appcleaner
+
 ## Clean My Mac
 
 System cleanup
