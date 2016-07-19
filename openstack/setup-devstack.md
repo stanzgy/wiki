@@ -23,9 +23,9 @@
 
 #### 设置 Python 环境
 
-确认安装了 python-dev 包
+确认安装必要的依赖包
 
-    $ aptitude install python-dev
+    $ aptitude install python-dev libffi-dev libssl-dev
 
 创建/修改你的 pip.conf 配置文件，将 index-url 修改为我们的私有 PyPI 源
 
