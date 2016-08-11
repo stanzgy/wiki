@@ -4,118 +4,175 @@
 
 A Windows shell package
 
-Homepage: https://github.com/babun/babun
-
-## Notepad++
-
-Text Editor
-
-Homepage: https://notepad-plus-plus.org
-
-## Firefox
-
-Internet browser
-
-Homepage: https://www.mozilla.org/en-US/firefox/new
+https://github.com/babun/babun
 
 ## Chrome
 
 Internet browser
 
-Homepage: http://www.google.com/chrome
+http://www.google.com/chrome
+
+## Bandzip
+
+File archiver
+
+http://www.bandisoft.com/bandizip
+
+## Sublime Text
+
+Text Editor
+
+http://www.sublimetext.com
+
+## Moeditor
+
+Markdown editor
+
+https://github.com/Moeditor/Moeditor
 
 ## Thunderbird
 
 Mail client
 
-Homepage: https://www.mozilla.org/en-US/thunderbird
+https://www.mozilla.org/en-US/thunderbird
 
 ## Office 365
 
 Microsoft Office suite
 
-Homepage: https://www.office.com
-
-## Bandzip
-
-Zip Archiver
-
-Homepage: http://www.bandisoft.com/bandizip
+https://www.office.com
 
 ## Honeyview
 
 Image viewer
 
-Homepage: http://www.bandisoft.com/honeyview
-
-## Listary
-
-Launcher
-
-Homepage: http://www.listary.com
-
-## Ditto
-
-Clipboard manager
-
-Homepage: http://ditto-cp.sourceforge.net
+http://www.bandisoft.com/honeyview
 
 ## Putty
 
 SSH and telnet client
 
-Homepage: http://www.putty.org
+http://www.putty.org
+
+## VideoLAN
+
+Media and streaming player
+
+http://www.videolan.org/vlc/
 
 ## MPC-HC
 
 Media player
 
-Homepage: https://mpc-hc.org
+https://mpc-hc.org
 
 ## LAVFilters
 
 DirectShow media splitter and decoders
 
-Homepage: https://github.com/Nevcairiel/LAVFilters
+https://github.com/Nevcairiel/LAVFilters
 
 ## madVR
 
 DirectShow video renderer
 
-Homepage: http://www.madvr.com
+http://www.madvr.com
 
 ## HexChat
 
 IRC client
 
-Homepage: https://hexchat.github.io
+https://hexchat.github.io
 
 ## DAEMON Tools Lite
 
 Virtual device management
 
-Homepage: https://www.daemon-tools.cc/products/dtLite
+https://www.daemon-tools.cc/products/dtLite
 
-## CrystalDiskInfo
+## LICEcap
 
-HDD/SSD utility
+Capture screen to .gif
 
-Homepage: http://crystalmark.info/software/CrystalDiskInfo/index-e.html
-
-## AS SSD Benchmark
-
-HDD/SSD benchmark
-
-Homepage: http://www.alex-is.de/PHP/fusion/downloads.php?download_id=9
+http://www.cockos.com/licecap/
 
 ## CPU-Z
 
 CPU Information
 
-Homepage: http://www.cpuid.com/softwares/cpu-z.html
+http://www.cpuid.com/softwares/cpu-z.html
 
 ## GPU-Z
 
 GPU Information
 
-Homepage: https://www.techpowerup.com/gpuz
+https://www.techpowerup.com/gpuz
+
+## AS SSD Benchmark
+
+HDD/SSD benchmark
+
+http://www.alex-is.de/PHP/fusion/downloads.php?download_id=9
+
+## CrystalDiskInfo
+
+HDD/SSD utility
+
+http://crystalmark.info/software/CrystalDiskInfo/index-e.html
+
+## WinMTR
+
+Network Traceroute tools
+
+http://winmtr.net
+
+## BestTrace
+
+Network Traceroute tools
+
+https://www.ipip.net/download.html
+
+
+## Optional
+
+## Notepad++
+
+Text Editor
+
+https://notepad-plus-plus.org
+
+## Firefox
+
+Internet browser
+
+https://www.mozilla.org/en-US/firefox/new
+
+## 7-Zip
+
+File archiver
+
+http://www.7-zip.org
+
+## Listary
+
+Launcher
+
+http://www.listary.com
+
+## Ditto
+
+Clipboard manager
+
+http://ditto-cp.sourceforge.net
+
+## mpv
+
+Media player
+
+https://mpv.io
+
+## fliqlo screen saver
+
+A clock screen saver
+
+http://fliqlo.com/
