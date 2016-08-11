@@ -4,178 +4,241 @@
 
 Terminal replacement.
 
-Homepage: https://iterm2.com
+https://iterm2.com
 
 ## Homebrew
 
 The missing package manager for OS X
 
-Homepage: http://brew.sh
-
-## Homebrew caskroom
-
-Homebrew extention
-
-Homepage: http://caskroom.io
+http://brew.sh
 
 ## Alfred Powerpack
 
 Launcher
 
-Homepage: https://www.alfredapp.com
-
-## Firefox
-
-Internet browser
-
-Homepage: https://www.mozilla.org/en-US/firefox/new
+https://www.alfredapp.com
 
 ## Chrome
 
 Internet browser
 
-Homepage: http://www.google.com/chrome
+http://www.google.com/chrome
 
 ## Thunderbird
 
 Mail client
 
-Homepage: https://www.mozilla.org/en-US/thunderbird
-
-## Office 365
-
-Microsoft Office suite
-
-Homepage: https://www.office.com
-
-## Tunnelblick
-
-Openvpn OS X client
-
-Homepage: https://tunnelblick.net
-
-## iStat Menus
-
-System monitor
-
-Homepage: https://bjango.com/mac/istatmenus
-
-## Little Snitch
-
-Network firewall
-
-Homepage: https://www.obdev.at/products/littlesnitch/index.html
-
-## Bartender
-
-Menubar organizer
-
-Homepage: http://www.macbartender.com
-
-# Spectacle
-
-Window organizer
-
-Homepage: https://github.com/eczarny/spectacle
-
-## Karabiner
-
-Keyboard customizer
-
-Homepage: https://pqrs.org/osx/karabiner/index.html.en
-
-## Seil
-
-Remap Caps Lock key
-
-Homepage: https://pqrs.org/osx/karabiner/seil.html.en
-
-## XtraFinder
-
-Finder enhancement
-
-Homepage: https://www.trankynam.com/xtrafinder
-
-## Unarchiver
-
-Archive extractor
-
-Homepage: http://unarchiver.c3.cx/unarchiver
-
-## KeepingYouAwake
-
-Activated to prevent going into sleep
-
-Homepage: https://github.com/newmarcel/KeepingYouAwake
-
-## NoSleep
-
-Preventing sleep when close the lid
-
-Homepage: https://github.com/integralpro/nosleep
-
-## Padbury clock screen saver
-
-A clock screen saver
-
-Homepage: http://padbury.me/clock
-
-## CatchMouse
-
-Quick move mouse among screens
-
-Homepage: http://ftnew.com/catchmouse.html
-
-## Display Menu
-
-Display management
-
-Homepage: http://displaymenu.milchimgemuesefach.de
+https://www.mozilla.org/en-US/thunderbird
 
 ## Sublime Text
 
 Text Editor
 
-Homepage: http://www.sublimetext.com
+http://www.sublimetext.com
 
-## AppCleaner
+## IntelliJ IDEA
 
-Uninstall Apps
+Java/Scala IDE
 
-Homepage: http://www.freemacsoft.net/appcleaner
+https://www.jetbrains.com/idea
+
+## Office 365
+
+Microsoft Office suite
+
+https://www.office.com
+
+## Moeditor
+
+Markdown editor, alternative to MacDown
+
+https://github.com/Moeditor/Moeditor
+
+## VideoLAN
+
+Media and stream player
+
+http://www.videolan.org/vlc
+
+## Tunnelblick
+
+OpenVPN OS X client
+
+https://tunnelblick.net
+
+## iStat Menus
+
+System monitor
+
+https://bjango.com/mac/istatmenus
+
+## Little Snitch
+
+Network firewall
+
+https://www.obdev.at/products/littlesnitch/index.html
+
+## Bartender
+
+Menubar organizer
+
+http://www.macbartender.com
+
+# Spectacle
+
+Window organizer
+
+https://github.com/eczarny/spectacle
+
+## Karabiner
+
+Keyboard customizer
+
+https://pqrs.org/osx/karabiner/index.html.en
+
+## Seil
+
+Remap Caps Lock key
+
+https://pqrs.org/osx/karabiner/seil.html.en
+
+## XtraFinder
+
+Finder enhancement
+
+https://www.trankynam.com/xtrafinder
+
+## Unarchiver
+
+Archive extractor
+
+http://unarchiver.c3.cx/unarchiver
+
+## KeepingYouAwake
+
+Activated to prevent going into sleep
+
+https://github.com/newmarcel/KeepingYouAwake
+
+## NoSleep
+
+Preventing sleep when close the lid
+
+https://github.com/integralpro/nosleep
+
+## Padbury clock screen saver
+
+A clock screen saver
+
+http://padbury.me/clock
+
+## CatchMouse
+
+Quick move mouse among screens
+
+http://ftnew.com/catchmouse.html
+
+## Display Menu
+
+Display management
+
+http://displaymenu.milchimgemuesefach.de
 
 ## Clean My Mac
 
 System cleanup
 
-Homepage: http://macpaw.com/cleanmymac
+http://macpaw.com/cleanmymac
 
 ## Sequel Pro
 
 MySQL database management
 
-Homepage: http://www.sequelpro.com
+http://www.sequelpro.com
+
+## PSequel
+
+PostgreSQL database management
+
+http://www.psequel.com/
 
 ## f.lux
 
 Screen color auto adjustment
 
-Homepage: https://justgetflux.com
+https://justgetflux.com
 
 ## Noizio
 
 White noise generator
 
-Homepage: http://noiz.io
+http://noiz.io
 
-## CheatSheet
+## BestTrace
+
+Network Traceroute tools
+
+https://itunes.apple.com/us/app/best-trace/id1037779758
+
+## Gas Mask
+
+Hosts file manager
+
+https://github.com/2ndalpha/gasmask
+
+## LICEcap
+
+Capture screen to .gif
+
+http://www.cockos.com/licecap
+
+
+## Optional
+
+## Firefox
+
+Internet browser
+
+https://www.mozilla.org/en-US/firefox/new
+
+### MacDown
+
+Markdown editor, alternative to Moeditor
+
+https://github.com/MacDownApp/macdown
+
+### AppCleaner
+
+App uninstall tool
+
+http://www.freemacsoft.net/appcleaner
+
+### mpv
+
+Media player
+
+https://mpv.io
+
+### Skitch
+
+Picture annotation
+
+https://evernote.com/skitch
+
+### CheatSheet
 
 Show active shortcuts of current application
 
-Homepage: http://www.mediaatelier.com/CheatSheet
+http://www.mediaatelier.com/CheatSheet
 
-## DynamicLyrics
+### DynamicLyrics
 
 Display iTunes lyrics in the top Menu Bar
 
-Homepage: https://martianz.cn/dynamiclyrics
+https://martianz.cn/dynamiclyrics
+
+## fliqlo screen saver
+
+A clock screen saver
+
+http://fliqlo.com
