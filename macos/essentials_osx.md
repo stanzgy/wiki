@@ -237,8 +237,14 @@ Display iTunes lyrics in the top Menu Bar
 
 https://martianz.cn/dynamiclyrics
 
-## fliqlo screen saver
+### fliqlo screen saver
 
 A clock screen saver
 
 http://fliqlo.com
+
+### coconut Battery
+
+Show Mac and iOS devices battery health
+
+http://www.coconut-flavour.com/coconutbattery
