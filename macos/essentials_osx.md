@@ -1,192 +1,204 @@
-# My essential software list on MacOS
+## My essential software list on MacOS
 
-## iTerm2
+### iTerm2
 
 Terminal replacement.
 
 https://iterm2.com
 
-## Homebrew
+### Homebrew
 
 The missing package manager for OS X
 
 http://brew.sh
 
-## Alfred Powerpack
+### Alfred Powerpack
 
 Launcher
 
 https://www.alfredapp.com
 
-## Chrome
+### Chrome
 
 Internet browser
 
 http://www.google.com/chrome
 
-## Thunderbird
+### Outlook
 
 Mail client
 
-https://www.mozilla.org/en-US/thunderbird
+Install from MAS
 
-## Sublime Text
+### Surge
+
+Fxxk GFW
+
+http://nssurge.com
+
+### Karabiner-Elements
+
+Keyboard customizer
+
+https://github.com/tekezo/Karabiner-Elements
+
+### Sublime Text
 
 Text Editor
 
 http://www.sublimetext.com
 
-## IntelliJ IDEA
+### IntelliJ IDEA
 
 Java/Scala IDE
 
 https://www.jetbrains.com/idea
 
-## Office 365
+### Office 365
 
 Microsoft Office suite
 
 https://www.office.com
 
-## Moeditor
+### Moeditor
 
-Markdown editor, alternative to MacDown
+Markdown editor
 
 https://github.com/Moeditor/Moeditor
 
-## VideoLAN
+### VideoLAN
 
 Media and stream player
 
 http://www.videolan.org/vlc
 
-## Tunnelblick
+### Keka
+
+Archive extractor
+
+http://www.kekaosx.com/en
+
+### Tunnelblick
 
 OpenVPN OS X client
 
 https://tunnelblick.net
 
-## iStat Menus
+### iStat Menus
 
 System monitor
 
 https://bjango.com/mac/istatmenus
 
-## Little Snitch
+### Little Snitch
 
 Network firewall
 
 https://www.obdev.at/products/littlesnitch/index.html
 
-## Bartender
+### Bartender
 
 Menubar organizer
 
 http://www.macbartender.com
 
-# Spectacle
+### Spectacle
 
 Window organizer
 
 https://github.com/eczarny/spectacle
 
-## Karabiner
-
-Keyboard customizer
-
-https://pqrs.org/osx/karabiner/index.html.en
-
-## Seil
-
-Remap Caps Lock key
-
-https://pqrs.org/osx/karabiner/seil.html.en
-
-## XtraFinder
-
-Finder enhancement
-
-https://www.trankynam.com/xtrafinder
-
-## Unarchiver
-
-Archive extractor
-
-http://unarchiver.c3.cx/unarchiver
-
-## KeepingYouAwake
+### KeepingYouAwake
 
 Activated to prevent going into sleep
 
 https://github.com/newmarcel/KeepingYouAwake
 
-## NoSleep
+### NoSleep
 
 Preventing sleep when close the lid
 
 https://github.com/integralpro/nosleep
 
-## Padbury clock screen saver
+### PopClip
+
+Text select enhancement
+
+Install from MAS
+
+### Padbury clock screen saver
 
 A clock screen saver
 
 http://padbury.me/clock
 
-## CatchMouse
+### CatchMouse
 
 Quick move mouse among screens
 
 http://ftnew.com/catchmouse.html
 
-## Display Menu
+### Display Menu
 
 Display management
 
 http://displaymenu.milchimgemuesefach.de
 
-## Clean My Mac
+### Clean My Mac
 
 System cleanup
 
 http://macpaw.com/cleanmymac
 
-## Sequel Pro
+### Microsoft Remote Desktop
+
+Microsoft remote desktop
+
+Install from MAS
+
+### OneDrive
+
+Microsoft cloud storage
+
+Install from MAS
+
+### Sequel Pro
 
 MySQL database management
 
 http://www.sequelpro.com
 
-## PSequel
+### PSequel
 
 PostgreSQL database management
 
 http://www.psequel.com/
 
-## f.lux
+### f.lux
 
 Screen color auto adjustment
 
 https://justgetflux.com
 
-## Noizio
+### Noizio
 
 White noise generator
 
 http://noiz.io
 
-## BestTrace
+### BestTrace
 
 Network Traceroute tools
 
-https://itunes.apple.com/us/app/best-trace/id1037779758
+Install from MAS
 
-## Gas Mask
+### Gas Mask
 
 Hosts file manager
 
 https://github.com/2ndalpha/gasmask
 
-## LICEcap
+### LICEcap
 
 Capture screen to .gif
 
@@ -195,15 +207,45 @@ http://www.cockos.com/licecap
 
 ## Optional
 
-## Firefox
+### Unarchiver
+
+Archive extractor
+
+http://unarchiver.c3.cx/unarchiver
+
+### ShadowsocksX-NG
+
+Fxxk GFW
+
+https://github.com/shadowsocks/ShadowsocksX-NG
+
+### Firefox
 
 Internet browser
 
 https://www.mozilla.org/en-US/firefox/new
 
+### Thunderbird
+
+Mail client
+
+https://www.mozilla.org/en-US/thunderbird
+
+### Telegram
+
+Instant messenger
+
+https://macos.telegram.org
+
+### Twitter
+
+Twitter
+
+Install from MAS
+
 ### MacDown
 
-Markdown editor, alternative to Moeditor
+Markdown editor
 
 https://github.com/MacDownApp/macdown
 
@@ -248,3 +290,29 @@ http://fliqlo.com
 Show Mac and iOS devices battery health
 
 http://www.coconut-flavour.com/coconutbattery
+
+### QBlocker
+
+Block unintended CMD + Q
+
+https://github.com/steve228uk/QBlocker
+
+## Obsolete
+
+### XtraFinder
+
+Finder enhancement, not working under 10.12
+
+https://www.trankynam.com/xtrafinder
+
+### Karabiner
+
+Keyboard customizer, replaced by Karabiner-Elements
+
+https://pqrs.org/osx/karabiner/index.html.en
+
+### Seil
+
+Remap Caps Lock key, replaced by Karabiner-Elements
+
+https://pqrs.org/osx/karabiner/seil.html.en
