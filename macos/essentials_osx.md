@@ -72,11 +72,11 @@ Media and stream player
 
 http://www.videolan.org/vlc
 
-### Keka
+### The Unarchiver
 
 Archive extractor
 
-http://www.kekaosx.com/en
+Install from MAS
 
 ### Tunnelblick
 
