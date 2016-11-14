@@ -207,12 +207,6 @@ http://www.cockos.com/licecap
 
 ## Optional
 
-### Unarchiver
-
-Archive extractor
-
-http://unarchiver.c3.cx/unarchiver
-
 ### ShadowsocksX-NG
 
 Fxxk GFW
@@ -260,6 +254,12 @@ http://www.freemacsoft.net/appcleaner
 Media player
 
 https://mpv.io
+
+### AirServer
+
+Screen mirroring software receiver for Mac/PC
+
+http://www.airserver.com/
 
 ### Skitch
 
