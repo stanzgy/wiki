@@ -204,6 +204,12 @@ Capture screen to .gif
 
 http://www.cockos.com/licecap
 
+### MacPass
+
+Personal password management
+
+https://github.com/mstarke/MacPass
+
 
 ## Optional
 
