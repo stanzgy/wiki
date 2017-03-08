@@ -69,6 +69,42 @@ Similar to server certificates
     $ openssl pkcs12 -export -certfile ca_chain.crt -in client.crt -inkey client.key -out client.p12
 
 
+## Verify certificates
+
+### Check if certificate match CA
+
+    $ openssl verify -verbose -CAfile ca.crt server.crt
+
+### Check if certificate match private key
+
+    $ openssl x509 -noout -modulus -in server.crt | openssl md5
+    $ openssl rsa -noout -modulus -in server.key | openssl md5
+    $ openssl req -noout -modulus -in server.csr | openssl md5
+
+### Check SSL protocol
+
+    $ openssl s_client -connect HOST:443 -${protocol}
+
+`${protocol}` candidates: tls1 tls1_1 tls1_2 tls1_3 ssl2 ssl3
+
+### Check SSL Cipher
+
+    $ openssl s_client -connect HOST:443 -cipher ${cipher}
+
+`${cipher}` candidates: ECDH RC4-SHA ...
+
+### Check SNI
+
+    $ openssl s_client -connect HOST:443 -servername ${sni_host}
+
+### Check if client certificate matched
+
+    $ openssl s_client -connect HOST:443 \
+       -cert client.crt \
+       -key client.key  \
+       -state -debug
+
+
 ## Config file example
 
 ### v3_ca.ext
