@@ -1,4 +1,6 @@
-## My essential software list on MacOS
+# My essential software list on MacOS
+
+## Daily use
 
 ### iTerm2
 
@@ -18,6 +20,12 @@ Launcher
 
 https://www.alfredapp.com
 
+### The Unarchiver
+
+Archive extractor
+
+Install from MAS
+
 ### Chrome
 
 Internet browser
@@ -29,6 +37,18 @@ http://www.google.com/chrome
 Mail client
 
 Install from MAS
+
+### OneDrive
+
+Microsoft cloud storage
+
+Install from MAS
+
+### Office 365
+
+Microsoft Office suite
+
+https://www.office.com
 
 ### Surge
 
@@ -48,47 +68,27 @@ Text Editor
 
 http://www.sublimetext.com
 
-### IntelliJ IDEA
-
-Java/Scala IDE
-
-https://www.jetbrains.com/idea
-
-### Office 365
-
-Microsoft Office suite
-
-https://www.office.com
-
 ### Moeditor
 
 Markdown editor
 
 https://github.com/Moeditor/Moeditor
 
-### VideoLAN
-
-Media and stream player
-
-http://www.videolan.org/vlc
-
-### The Unarchiver
-
-Archive extractor
-
-Install from MAS
-
-### Tunnelblick
-
-OpenVPN OS X client
-
-https://tunnelblick.net
-
 ### iStat Menus
 
 System monitor
 
 https://bjango.com/mac/istatmenus
+
+### IINA
+
+https://lhc70000.github.io/iina
+
+### Tunnelblick
+
+OpenVPN client
+
+https://tunnelblick.net
 
 ### Little Snitch
 
@@ -116,7 +116,7 @@ https://github.com/newmarcel/KeepingYouAwake
 
 ### NoSleep
 
-Preventing sleep when close the lid
+Prevent sleep when close the lid
 
 https://github.com/integralpro/nosleep
 
@@ -131,12 +131,6 @@ Install from MAS
 A clock screen saver
 
 http://padbury.me/clock
-
-### CatchMouse
-
-Quick move mouse among screens
-
-http://ftnew.com/catchmouse.html
 
 ### Display Menu
 
@@ -156,11 +150,11 @@ Microsoft remote desktop
 
 Install from MAS
 
-### OneDrive
+### IntelliJ IDEA
 
-Microsoft cloud storage
+Java/Scala IDE
 
-Install from MAS
+https://www.jetbrains.com/idea
 
 ### Sequel Pro
 
@@ -172,7 +166,7 @@ http://www.sequelpro.com
 
 PostgreSQL database management
 
-http://www.psequel.com/
+http://www.psequel.com
 
 ### f.lux
 
@@ -192,18 +186,6 @@ Network Traceroute tools
 
 Install from MAS
 
-### Gas Mask
-
-Hosts file manager
-
-https://github.com/2ndalpha/gasmask
-
-### LICEcap
-
-Capture screen to .gif
-
-http://www.cockos.com/licecap
-
 ### MacPass
 
 Personal password management
@@ -212,6 +194,12 @@ https://github.com/mstarke/MacPass
 
 
 ## Optional
+
+### VideoLAN
+
+Media and stream player
+
+http://www.videolan.org/vlc
 
 ### ShadowsocksX-NG
 
@@ -265,7 +253,25 @@ https://mpv.io
 
 Screen mirroring software receiver for Mac/PC
 
-http://www.airserver.com/
+http://www.airserver.com
+
+### CatchMouse
+
+Quick move mouse among screens
+
+http://ftnew.com/catchmouse.html
+
+### Gas Mask
+
+Hosts file manager
+
+https://github.com/2ndalpha/gasmask
+
+### LICEcap
+
+Capture screen to gif
+
+http://www.cockos.com/licecap
 
 ### Skitch
 
@@ -302,6 +308,7 @@ http://www.coconut-flavour.com/coconutbattery
 Block unintended CMD + Q
 
 https://github.com/steve228uk/QBlocker
+
 
 ## Obsolete
 
