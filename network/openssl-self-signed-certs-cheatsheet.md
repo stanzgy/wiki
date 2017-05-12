@@ -58,6 +58,10 @@
 
     $ openssl ca -in server.csr -config ../openssl.cnf -days 1460 -out server.crt
 
+#### Create dhparam.pem for TLS
+
+    $ openssl dhparam -out dhparam.pem 2048
+
 
 ### Client certificates
 
