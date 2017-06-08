@@ -26,23 +26,17 @@ Text Editor
 
 http://www.sublimetext.com
 
-### Moeditor
-
-Markdown editor
-
-https://github.com/Moeditor/Moeditor
-
 ### Outlook
 
 Mail client
 
-Install from MAS
+Included in Office 365
 
 ### OneDrive
 
 Microsoft cloud storage
 
-Install from MAS
+https://onedrive.live.com
 
 ### Office 365
 
@@ -131,11 +125,11 @@ https://www.virtualbox.org
 
 ## Optional
 
-### Notepad++
+### Moeditor
 
-Text Editor
+Markdown editor
 
-https://notepad-plus-plus.org
+https://github.com/Moeditor/Moeditor
 
 ### Firefox
 
